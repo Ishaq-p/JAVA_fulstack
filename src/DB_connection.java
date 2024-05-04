@@ -18,6 +18,7 @@ public class DB_connection {
     private String pass;
     private String url;
     public Connection connection;
+    public boolean isLoggedIn = false;
 
     private Properties properties;
 
@@ -71,6 +72,18 @@ public class DB_connection {
     // checkinkg for users either by their email or username
     public boolean check4user(String keyAttribute, boolean isEmail){
         String query = (isEmail) ? String.format("SELECT * FROM CustomerInfo WHERE email = '%s';", keyAttribute) : String.format("SELECT * FROM CustomerInfo WHERE username = '%s';", keyAttribute);
+        // System.out.println(query);
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query)){
+            return resultSet.next();
+        }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+        }
+    }
+
+    public boolean loginUser(String username, String password){
+        String query = String.format("SELECT * FROM CustomerInfo WHERE username = '%s' AND password = '%s';", username, password);
         // System.out.println(query);
         try (Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query)){

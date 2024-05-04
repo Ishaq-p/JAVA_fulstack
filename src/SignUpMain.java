@@ -1,7 +1,7 @@
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Main {
+public class SignUpMain {
 
     private final String[] errors = {"email", "password", "username"};
 
@@ -11,7 +11,7 @@ public class Main {
         }
     }
     public static void main(String[] args) throws Exception {
-        Main man = new Main();
+        SignUpMain man = new SignUpMain();
 
         LocalDate date = LocalDate.of(2001,12,11);
         Date sqlDate = Date.valueOf(date);
@@ -26,7 +26,7 @@ public class Main {
         System.out.println(signup.check4email());
         System.out.println(signup.check4usrname());
 
-        if (signup.inputValidity_email() || signup.inputValidity_pass() || signup.inputValidity_usrname()){
+        if (signup.inputValidity_email() && signup.inputValidity_pass() && signup.inputValidity_usrname()){
             if (signup.check4email() && signup.check4email()){
                 System.out.println("User already exist. (try a new username/email or both)");
             }else{
@@ -44,9 +44,6 @@ public class Main {
             man.checkValidity(signup.inputValidity_usrname(), 2);
 
         }
-
-
-
 
         signup.disconnect();
     }
