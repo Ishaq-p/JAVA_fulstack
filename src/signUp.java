@@ -1,8 +1,8 @@
-import java.util.Date;
+import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.print.DocFlavor.STRING;
+// import javax.print.DocFlavor.STRING;
 
 
 public class signUp  extends DB_connection{
@@ -16,15 +16,17 @@ public class signUp  extends DB_connection{
     private String fulName;
     private Date DOB;
     private String nationality;
+    private String gender;
     private String username;
     private String password;
     private String email;
 
-    public signUp(String name, Date dob_, String country, String usrname, String passcode, String Email){
+    public signUp(String name, Date dob_, String country, String gender_, String usrname, String passcode, String Email){
         super();
         this.fulName = name;
         this.DOB = dob_;
         this.nationality = country;
+        this.gender = gender_;
         this.username = usrname;
         this.password = passcode;
         this.email = Email;
@@ -45,24 +47,40 @@ public class signUp  extends DB_connection{
             return true;
         }
     }
-    public String inputValidity_name(){
+    public void inputValidity_name(){
         String final_fulname = "";
         String[] fulname_list = this.fulName.split("\\s+"); // one or more spaces
         for (String i : fulname_list){
             final_fulname += " " + i.replaceAll("^\\s+|\\s+$", "");
         }
-        return final_fulname.replaceAll("^\\s+|\\s+$", "");
+        this.fulName = final_fulname.replaceAll("^\\s+|\\s+$", "");
     }
 
-    // public String check4usrname(){} // done by the database object
-    // public String check4email(){}   //done by the database obj
-
-
-    public static void main(String[] args){
-        signUp sign = new signUp("username_regex", null, "email_regex", "username_regex", "username_regex", "email_regex");
-
-        String name = sign.inputValidity_name();
-        System.out.println(name);
+    public boolean check4usrname(){
+        boolean isUserExist = check4user(this.username, false);
+        return isUserExist;
+    } // done by the database object
+    public boolean check4email(){
+        boolean isUserExist = check4user(this.email, true);
+        return isUserExist;
+    }   //done by the database obj
+    
+    public boolean saveUser(){
+        boolean isSaved = save_SignUp_user(this.fulName, 
+                                            this.DOB, 
+                                            this.nationality, 
+                                            this.gender, 
+                                            this.username, 
+                                            this.password, 
+                                            this.email);
+        return isSaved;
     }
+
+    // public static void main(String[] args){
+    //     signUp sign = new signUp("username_regex", null, "email_regex", "username_regex", "username_regex", "email_regex");
+
+    //     String name = sign.inputValidity_name();
+    //     System.out.println(name);
+    // }
     
 }

@@ -107,26 +107,26 @@ public class DB_connection {
 
 
 
-    public static void main(String[] args){
-        DB_connection connection = new DB_connection();
+    // public static void main(String[] args){
+    //     DB_connection connection = new DB_connection();
 
-        LocalDate localDate = LocalDate.of(2003,5, 6);
-        Date sqlDate = Date.valueOf(localDate);
-        connection.connect();
-        connection.connect();
-        boolean bool = connection.check4user("ashleyalvarez58@gmail.com", true);
-        System.out.println(bool);
+    //     LocalDate localDate = LocalDate.of(2003,5, 6);
+    //     Date sqlDate = Date.valueOf(localDate);
+    //     connection.connect();
+    //     connection.connect();
+    //     boolean bool = connection.check4user("ashleyalvarez58@gmail.com", true);
+    //     System.out.println(bool);
 
-        boolean bool1 = connection.save_SignUp_user("ishaq", sqlDate, "Afghanistan", "Male", "ishaqpaktin", "null", "null@null.com");
-        System.out.println(bool1);
+    //     boolean bool1 = connection.save_SignUp_user("ishaq", sqlDate, "Afghanistan", "Male", "ishaqpaktin", "null", "null@null.com");
+    //     System.out.println(bool1);
 
-        connection.disconnect();
-        connection.disconnect();
-        connection.connect();
-        connection.disconnect();
+    //     connection.disconnect();
+    //     connection.disconnect();
+    //     connection.connect();
+    //     connection.disconnect();
 
 
-    }
+    // }
 
 
 }
