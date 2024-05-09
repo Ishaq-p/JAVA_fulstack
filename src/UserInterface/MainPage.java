@@ -4,9 +4,21 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
+
+import org.jdatepicker.JDatePanel;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.UtilDateModel;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.DateComponentFormatter;
+
+
 
 public class MainPage extends JFrame{
     private String[] barButtonsNames = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", "SignUp", "LogIn"};
@@ -20,6 +32,8 @@ public class MainPage extends JFrame{
     private JTextField input_from = new JTextField(15);
     private JTextField input_to = new JTextField(15);
 
+    private UtilDateModel model = new UtilDateModel();
+    private UtilDateModel model1 = new UtilDateModel();
 
     public MainPage(){
         JPanel p_navBar = new JPanel(new BorderLayout());  // 11
@@ -85,14 +99,47 @@ public class MainPage extends JFrame{
         p_searchBottom.setLayout(new GridLayout(1,5));
 
         JPanel p_from = new JPanel(new BorderLayout());
-        p_from.add(new JLabel("From"), BorderLayout.NORTH);
+        p_from.add(new JLabel("From:"), BorderLayout.NORTH);
         p_from.add(input_from, BorderLayout.SOUTH);
         JPanel p_to = new JPanel(new BorderLayout());
-        p_to.add(new JLabel("to"), BorderLayout.NORTH);
+        p_to.add(new JLabel("To:"), BorderLayout.NORTH);
         p_to.add(input_to, BorderLayout.SOUTH);
+
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JPanel p_fromDate = new JPanel(new BorderLayout());
+        JLabel lblFromDate = new JLabel("Departure:");
+        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
+        p_fromDate.add(lblFromDate);
+        p_fromDate.add(datePicker, BorderLayout.SOUTH);
+        JPanel p_toDate = new JPanel(new BorderLayout());
+        JLabel lblToDate = new JLabel("Arrival:");
+        JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
+        p_toDate.add(lblToDate);
+        p_toDate.add(datePicker1, BorderLayout.SOUTH);
+
+        JPanel p_passengerNum = new JPanel(new BorderLayout());
+        JLabel lblPassengerNum = new JLabel("Number of Passengers:");
+        SpinnerNumberModel spinner = new SpinnerNumberModel(1,1,Integer.MAX_VALUE, 1);
+        JSpinner passenderNum = new JSpinner(spinner);
+        p_passengerNum.add(lblPassengerNum, BorderLayout.NORTH);
+        p_passengerNum.add(passenderNum, BorderLayout.SOUTH);
+
+        JButton searchButton = new JButton("Search Flights");
+
+
 
         p_searchBottom.add(p_from);
         p_searchBottom.add(p_to);
+        p_searchBottom.add(p_fromDate);
+        p_searchBottom.add(p_toDate);
+        p_searchBottom.add(p_passengerNum);
+        p_searchBottom.add(searchButton);
+
+        // p_searchBottom.add(toDateButton);
+
 
         
 
@@ -111,6 +158,27 @@ public class MainPage extends JFrame{
 
         add(p_navBar, BorderLayout.NORTH);
         add(p_body, BorderLayout.CENTER);
+    }
+
+    private void showDatePicker(JTextField textField) {
+        UtilDateModel model = new UtilDateModel();
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateComponentFormatter());
+        datePicker.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("dateSelected")) {
+                    textField.setText(datePicker.getJFormattedTextField().getText());
+                }
+            }
+        });
+        JPopupMenu popupMenu = new JPopupMenu();
+        popupMenu.add(datePicker);
+        popupMenu.show(textField, 0, textField.getHeight());
     }
 
     public static void main(String[] args){

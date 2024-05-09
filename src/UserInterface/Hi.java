@@ -1,40 +1,32 @@
 package UserInterface;
 
-import org.jdatepicker.JDatePicker;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
 
 public class Hi extends JFrame {
+
     public Hi() {
-        JPanel panel = new JPanel(new FlowLayout());
+        setTitle("Number Field Example");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create a Properties object to configure the date picker
-        Properties properties = new Properties();
-        properties.put("text.today", "Today");
-        properties.put("text.month", "Month");
-        properties.put("text.year", "Year");
+        // Create a spinner with default model
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1); // Initial value, minimum, maximum, step
+        JSpinner spinner = new JSpinner(spinnerModel);
 
-        // Create a JDatePicker with the configured properties
-        JDatePicker datePicker = new JDatePicker(properties);
+        // Set preferred size for the spinner to ensure it's visible
+        spinner.setPreferredSize(new Dimension(100, 30));
 
-        panel.add(datePicker);
-        add(panel);
+        // Add the spinner to the frame
+        getContentPane().add(spinner, BorderLayout.CENTER);
 
-        // Other frame settings...
+        pack();
+        setLocationRelativeTo(null); // Center the frame
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Hi frame = new Hi();
-            frame.setTitle("Date Picker Example");
-            frame.setSize(400, 200);
-            frame.setLocationRelativeTo(null);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+            Hi example = new Hi();
+            example.setVisible(true);
         });
     }
 }
