@@ -60,7 +60,7 @@ public class LoginPage extends JFrame{
         setTitle("Login main page");
         setSize(400, 500); // Setting a default size for demonstration
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setVisible(true);
     }
 

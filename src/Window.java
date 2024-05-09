@@ -14,12 +14,15 @@ public class Window extends JFrame{
     private int barRed=33, barGreen=37, barBlue=42;
     private Color navbarColor = new Color(barRed,barGreen,barBlue);
 
+    private MainPage mainPage = new MainPage();
+
     public Window(){
+        setLayout(new BorderLayout());
         JPanel p_navBar = new JPanel(new BorderLayout());  // 11
         p_navBar.setBorder(new EmptyBorder(10, 0, 10, 0)); // top, left, bottom, right
         p_navBar.setBackground(navbarColor);
         
-        JPanel p_logo = new JPanel();  //12
+        JPanel p_logo = new JPanel(new FlowLayout(FlowLayout.LEFT));  //12
         p_logo.setBackground(navbarColor);
         
         //  navbar
@@ -53,26 +56,23 @@ public class Window extends JFrame{
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
 
-        add(p_navBar);
+        add(p_navBar, BorderLayout.NORTH);
+        add(mainPage, BorderLayout.CENTER);
 
         
         setTitle("MainPage");
         setSize(1920,1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
 
 
     }
     
-
+ 
     public static void main(String[] args){
-        Window baseFrame = new Window();
-        MainPage mainFrame = new MainPage();
-
-        // baseFrame.add(mainFrame);
-        // baseFrame.setVisible(true);
-
-
-        mainFrame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            new Window();
+        });
     }
 }

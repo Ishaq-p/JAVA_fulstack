@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
+import java.util.concurrent.Flow;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -14,7 +15,7 @@ import org.jdatepicker.impl.DateComponentFormatter;
 
 
 
-public class MainPage extends JFrame{
+public class MainPage extends JPanel{
 
     private JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
     private JRadioButton radBtn_oneWay = new JRadioButton("One Way");
@@ -28,7 +29,8 @@ public class MainPage extends JFrame{
 
     public MainPage(){
         // body 
-        JPanel p_body = new JPanel();  // 21
+        JPanel p_body = new JPanel(new GridLayout(2,1));  // 21
+        // p_body.setPreferredSize(new Dimension(1920,900));
 
         JPanel p_bigImage = new JPanel();  // 22
         ImageIcon bigicon = new ImageIcon("/home/ishaq/Documents/books/6th_semes/visualBasedProg/week10/VB_mainProj/bigImage.png"); // Replace "path/to/your/image.jpg" with the path to your image file
@@ -40,6 +42,7 @@ public class MainPage extends JFrame{
         JPanel p_searchArea = new JPanel(new BorderLayout());  // 23
 
         JPanel p_searchTop = new JPanel(new BorderLayout());   // 231
+        p_searchTop.setBorder(new EmptyBorder(0, 100, 0, 500)); // top, left, bottom, right
         JPanel p_searchTopLeft = new JPanel();
         p_searchTopLeft.add(radBtn_roundTrip);
         p_searchTopLeft.add(radBtn_oneWay);
@@ -57,12 +60,12 @@ public class MainPage extends JFrame{
 
 
         JPanel p_searchBottom = new JPanel(); // 232
-        p_searchBottom.setLayout(new GridLayout(1,5));
+        p_searchBottom.setLayout(new FlowLayout());
 
-        JPanel p_from = new JPanel(new BorderLayout());
+        JPanel p_from = new JPanel(new FlowLayout());
         p_from.add(new JLabel("From:"), BorderLayout.NORTH);
         p_from.add(input_from, BorderLayout.SOUTH);
-        JPanel p_to = new JPanel(new BorderLayout());
+        JPanel p_to = new JPanel(new FlowLayout());
         p_to.add(new JLabel("To:"), BorderLayout.NORTH);
         p_to.add(input_to, BorderLayout.SOUTH);
 
@@ -70,18 +73,18 @@ public class MainPage extends JFrame{
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
-        JPanel p_fromDate = new JPanel(new BorderLayout());
+        JPanel p_fromDate = new JPanel(new FlowLayout());
         JLabel lblFromDate = new JLabel("Departure:");
         JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
         p_fromDate.add(lblFromDate);
         p_fromDate.add(datePicker, BorderLayout.SOUTH);
-        JPanel p_toDate = new JPanel(new BorderLayout());
+        JPanel p_toDate = new JPanel(new FlowLayout());
         JLabel lblToDate = new JLabel("Arrival:");
         JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
         p_toDate.add(lblToDate);
         p_toDate.add(datePicker1, BorderLayout.SOUTH);
 
-        JPanel p_passengerNum = new JPanel(new BorderLayout());
+        JPanel p_passengerNum = new JPanel(new FlowLayout());
         JLabel lblPassengerNum = new JLabel("Number of Passengers:");
         SpinnerNumberModel spinner = new SpinnerNumberModel(1,1,Integer.MAX_VALUE, 1);
         JSpinner passenderNum = new JSpinner(spinner);
@@ -89,6 +92,7 @@ public class MainPage extends JFrame{
         p_passengerNum.add(passenderNum, BorderLayout.SOUTH);
 
         JButton searchButton = new JButton("Search Flights");
+        searchButton.setPreferredSize(new Dimension(300,60));
 
 
 
@@ -101,8 +105,8 @@ public class MainPage extends JFrame{
 
         // p_searchBottom.add(toDateButton);
 
-        p_searchArea.add(p_searchBottom, BorderLayout.SOUTH);
         p_searchArea.add(p_searchTop, BorderLayout.NORTH);
+        p_searchArea.add(p_searchBottom, BorderLayout.CENTER);
 
 
 
@@ -110,12 +114,12 @@ public class MainPage extends JFrame{
         p_body.add(p_searchArea);
 
 
-        add(p_body, BorderLayout.CENTER);
+        add(p_body);
 
-        setTitle("MainPage");
-        setSize(1920,1080);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // setTitle("MainPage");
+        // setSize(1920,1080);
+        // setLocationRelativeTo(null);
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void showDatePicker(JTextField textField) {
@@ -145,6 +149,6 @@ public class MainPage extends JFrame{
 	// 	frame.setSize(1920, 1080);
 	// 	frame.setLocationRelativeTo(null);
 	// 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	// 	frame.setVisible(true);
+		// frame.setVisible(true);
     // }
 }
