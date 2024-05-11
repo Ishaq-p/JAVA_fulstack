@@ -1,5 +1,7 @@
+import UserInterface.FLightSelection;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
+import UserInterface.SignUpPage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,9 +17,18 @@ public class Window extends JFrame{
     private Color navbarColor = new Color(barRed,barGreen,barBlue);
 
     private MainPage mainPage = new MainPage();
+    private SignUpPage signUpPage = new SignUpPage(); 
+    // private FLightSelection flightSelection = new FLightSelection();
 
     public Window(){
         setLayout(new BorderLayout());
+        setTitle("MainPage");
+        setSize(1920,1080);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+
+        
         JPanel p_navBar = new JPanel(new BorderLayout());  // 11
         p_navBar.setBorder(new EmptyBorder(10, 0, 10, 0)); // top, left, bottom, right
         p_navBar.setBackground(navbarColor);
@@ -49,9 +60,45 @@ public class Window extends JFrame{
                         new LoginPage();
                     }
                 });
+            }else if (button=="SignUp"){
+                barBtn.addActionListener(new ActionListener() {
+                    
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        add(mainPage, BorderLayout.CENTER);
+                        revalidate();
+                        repaint();
+                    }
+                });
+            }else if (button=="Book&Plane"){
+                barBtn.addActionListener(new ActionListener() {
+                    
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        add(signUpPage, BorderLayout.CENTER);
+                        revalidate();
+                        repaint();
+                        
+
+                    }
+                });
+            }else if (button=="Experience"){
+                barBtn.addActionListener(new ActionListener() {
+                    
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        add(signUpPage, BorderLayout.CENTER);
+                        revalidate();
+                        repaint();
+                        
+
+                    }
+                });
             }
             p_barButtons.add(barBtn);
         }
+
+
 
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
@@ -59,16 +106,7 @@ public class Window extends JFrame{
         add(p_navBar, BorderLayout.NORTH);
         add(mainPage, BorderLayout.CENTER);
 
-        
-        setTitle("MainPage");
-        setSize(1920,1080);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-
-
-    }
-    
+    }  
  
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {

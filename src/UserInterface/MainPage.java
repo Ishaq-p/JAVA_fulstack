@@ -27,6 +27,8 @@ public class MainPage extends JPanel{
     private UtilDateModel model = new UtilDateModel();
     private UtilDateModel model1 = new UtilDateModel();
 
+    public JButton searchButton = new JButton("Search Flights");
+
     public MainPage(){
         // body 
         JPanel p_body = new JPanel(new GridLayout(2,1));  // 21
@@ -63,26 +65,34 @@ public class MainPage extends JPanel{
         p_searchBottom.setLayout(new FlowLayout());
 
         JPanel p_from = new JPanel(new FlowLayout());
-        p_from.add(new JLabel("From:"), BorderLayout.NORTH);
-        p_from.add(input_from, BorderLayout.SOUTH);
+        JPanel p_fromMini = new JPanel(new BorderLayout());
+        p_fromMini.add(new JLabel("From:"), BorderLayout.NORTH);
+        p_fromMini.add(input_from, BorderLayout.SOUTH);
+        p_from.add(p_fromMini);
         JPanel p_to = new JPanel(new FlowLayout());
-        p_to.add(new JLabel("To:"), BorderLayout.NORTH);
-        p_to.add(input_to, BorderLayout.SOUTH);
+        JPanel p_toMini = new JPanel(new BorderLayout());
+        p_toMini.add(new JLabel("To:"), BorderLayout.NORTH);
+        p_toMini.add(input_to, BorderLayout.SOUTH);
+        p_to.add(p_toMini);
 
         Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
         JPanel p_fromDate = new JPanel(new FlowLayout());
+        JPanel p_fromDateMini = new JPanel(new BorderLayout());
         JLabel lblFromDate = new JLabel("Departure:");
         JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
-        p_fromDate.add(lblFromDate);
-        p_fromDate.add(datePicker, BorderLayout.SOUTH);
+        p_fromDateMini.add(lblFromDate);
+        p_fromDateMini.add(datePicker, BorderLayout.SOUTH);
+        p_fromDate.add(p_fromDateMini);
         JPanel p_toDate = new JPanel(new FlowLayout());
+        JPanel p_toDateMini = new JPanel(new BorderLayout());
         JLabel lblToDate = new JLabel("Arrival:");
         JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
-        p_toDate.add(lblToDate);
-        p_toDate.add(datePicker1, BorderLayout.SOUTH);
+        p_toDateMini.add(lblToDate);
+        p_toDateMini.add(datePicker1, BorderLayout.SOUTH);
+        p_toDate.add(p_toDateMini);
 
         JPanel p_passengerNum = new JPanel(new FlowLayout());
         JLabel lblPassengerNum = new JLabel("Number of Passengers:");
@@ -91,8 +101,9 @@ public class MainPage extends JPanel{
         p_passengerNum.add(lblPassengerNum, BorderLayout.NORTH);
         p_passengerNum.add(passenderNum, BorderLayout.SOUTH);
 
-        JButton searchButton = new JButton("Search Flights");
-        searchButton.setPreferredSize(new Dimension(300,60));
+        // JButton searchButton = new JButton("Search Flights");
+        this.searchButton.setPreferredSize(new Dimension(300,60));
+        
 
 
 
@@ -112,6 +123,15 @@ public class MainPage extends JPanel{
 
         p_body.add(p_bigImage);
         p_body.add(p_searchArea);
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                add(new FLightSelection());
+                revalidate();
+                repaint();
+            }
+        });
 
 
         add(p_body);
