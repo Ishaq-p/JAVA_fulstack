@@ -124,14 +124,14 @@ public class MainPage extends JPanel{
         p_body.add(p_bigImage);
         p_body.add(p_searchArea);
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                add(new FLightSelection());
-                revalidate();
-                repaint();
-            }
-        });
+        // searchButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e){
+        //         add(new FLightSelection());
+        //         revalidate();
+        //         repaint();
+        //     }
+        // });
 
 
         add(p_body);

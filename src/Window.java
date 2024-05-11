@@ -1,6 +1,7 @@
 import UserInterface.FLightSelection;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
+import UserInterface.PassengerDetails;
 import UserInterface.SignUpPage;
 
 import javax.swing.*;
@@ -18,7 +19,8 @@ public class Window extends JFrame{
 
     private MainPage mainPage = new MainPage();
     private SignUpPage signUpPage = new SignUpPage(); 
-    // private FLightSelection flightSelection = new FLightSelection();
+    private FLightSelection flightSelection = new FLightSelection(6);
+    private PassengerDetails passengerDetails = new PassengerDetails(5);
 
     public Window(){
         setLayout(new BorderLayout());
@@ -41,8 +43,9 @@ public class Window extends JFrame{
         Image scaledImage = icon.getImage().getScaledInstance(218, 40, Image.SCALE_SMOOTH); // Set the desired width and height
         ImageIcon icon_scaled = new ImageIcon(scaledImage);
         
-        JLabel Logolabel = new JLabel(icon_scaled);
-        p_logo.add(Logolabel);
+        JButton logolabel = new JButton(icon_scaled){{setBackground(navbarColor);
+                                                    setBorder(new EmptyBorder(0,0,0,0));}};
+        p_logo.add(logolabel);
 
         JPanel p_barButtons = new JPanel(new GridLayout(1, barButtonsNames.length));  // 13
         for (String button : barButtonsNames){
@@ -65,7 +68,8 @@ public class Window extends JFrame{
                     
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        add(mainPage, BorderLayout.CENTER);
+                        removePages();
+                        add(signUpPage, BorderLayout.CENTER);
                         revalidate();
                         repaint();
                     }
@@ -75,11 +79,10 @@ public class Window extends JFrame{
                     
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        add(signUpPage, BorderLayout.CENTER);
+                        removePages();
+                        add(mainPage, BorderLayout.CENTER);
                         revalidate();
                         repaint();
-                        
-
                     }
                 });
             }else if (button=="Experience"){
@@ -87,16 +90,37 @@ public class Window extends JFrame{
                     
                     @Override
                     public void actionPerformed(ActionEvent e){
+                        removePages();
                         add(signUpPage, BorderLayout.CENTER);
                         revalidate();
                         repaint();
-                        
-
                     }
                 });
             }
             p_barButtons.add(barBtn);
         }
+
+        // action listener for the search button on the main page
+        mainPage.searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                removePages();
+                add(flightSelection);
+                revalidate();
+                repaint();
+            }
+        });
+        
+        // the turkish airlines logo button action listener
+        logolabel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                removePages();
+                add(mainPage, BorderLayout.CENTER);
+                revalidate();
+                repaint();
+            }
+        });
 
 
 
@@ -104,8 +128,14 @@ public class Window extends JFrame{
         p_navBar.add(p_logo, BorderLayout.WEST);
 
         add(p_navBar, BorderLayout.NORTH);
-        add(mainPage, BorderLayout.CENTER);
+        add(passengerDetails, BorderLayout.CENTER);
 
+    }
+    public void removePages(){
+        remove(mainPage);
+        remove(signUpPage);
+        remove(flightSelection);
+        remove(passengerDetails);
     }  
  
     public static void main(String[] args){

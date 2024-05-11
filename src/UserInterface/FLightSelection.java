@@ -5,16 +5,44 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.*;
-import java.util.concurrent.Flow;
 
-public class FLightSelection extends JFrame{
+public class FLightSelection extends JPanel{
 
     private String lbl_fromTo  = "<html><h2>02:00</h2><h3 style='color: gray;font-family: MuseoSans-900;'>IST</h3><h5 style='color: gray;font-family: MuseoSans-900;'>Istanbul</h5></html>";
     
 
-    public FLightSelection(){
+    public FLightSelection(int flightNum){
+
+        if (flightNum>5){
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+            JScrollPane scrollPane = new JScrollPane();
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            add(scrollPane);
+
+            JPanel p_window = new JPanel();
+            p_window.setLayout(new BoxLayout(p_window, BoxLayout.Y_AXIS));
+
+            for (int i=0;i<flightNum;i++){
+                p_window.add(eachFlight());
+            }
+            scrollPane.setViewportView(p_window);
+        }else{
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            for (int i=0;i<flightNum;i++){
+                panel.add(eachFlight());
+            }
+            add(panel);
+        }
+
+        
+
+    }
+
+    public JPanel eachFlight(){
         JPanel p_entireWindow = new JPanel(new GridLayout()){{setBackground(Color.WHITE);}};
-        p_entireWindow.setBorder(new LineBorder(Color.RED, 2));
+        p_entireWindow.setBorder(new LineBorder(Color.GREEN, 2));
 
         JPanel p_eachFlight = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         p_eachFlight.setBorder(new LineBorder(Color.RED, 2));
@@ -122,13 +150,14 @@ public class FLightSelection extends JFrame{
 
         p_entireWindow.add(p_eachFlight);
 
-        add(p_entireWindow);
-        pack();
-        setLayout(new FlowLayout());
-        setTitle("Flights to show");
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setVisible(true);
+        return p_entireWindow;
+        // add(p_entireWindow);
+        // pack();
+        // setLayout(new FlowLayout());
+        // setTitle("Flights to show");
+        // setLocationRelativeTo(null);
+        // setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        // setVisible(true);
 
         
 
