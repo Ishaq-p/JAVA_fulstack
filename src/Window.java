@@ -2,6 +2,7 @@ import UserInterface.FLightSelection;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
 import UserInterface.PassengerDetails;
+import UserInterface.Payment;
 import UserInterface.SignUpPage;
 
 import javax.swing.*;
@@ -20,7 +21,8 @@ public class Window extends JFrame{
     private MainPage mainPage = new MainPage();
     private SignUpPage signUpPage = new SignUpPage(); 
     private FLightSelection flightSelection = new FLightSelection(6);
-    private PassengerDetails passengerDetails = new PassengerDetails(5);
+    private PassengerDetails passengerDetails = new PassengerDetails(6);
+    private Payment payment = new Payment();
 
     public Window(){
         setLayout(new BorderLayout());
@@ -92,6 +94,12 @@ public class Window extends JFrame{
                     public void actionPerformed(ActionEvent e){
                         removePages();
                         add(signUpPage, BorderLayout.CENTER);
+                        for (Component component : signUpPage.getComponents()) {
+                            if (component instanceof JTextField) {
+                                ((JTextField) component).setText("");
+                                System.out.println(component);
+                            }
+                        }
                         revalidate();
                         repaint();
                     }
@@ -121,14 +129,31 @@ public class Window extends JFrame{
                 repaint();
             }
         });
-
+        flightSelection.btn_flightFinal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                removePages();
+                add(passengerDetails, BorderLayout.CENTER);
+                revalidate();
+                repaint();
+            }
+        });
+        passengerDetails.btn_passengerFinal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                removePages();
+                add(payment, BorderLayout.CENTER);
+                revalidate();
+                repaint();
+            }
+        });
 
 
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
 
         add(p_navBar, BorderLayout.NORTH);
-        add(passengerDetails, BorderLayout.CENTER);
+        add(mainPage, BorderLayout.CENTER);
 
     }
     public void removePages(){
@@ -136,6 +161,7 @@ public class Window extends JFrame{
         remove(signUpPage);
         remove(flightSelection);
         remove(passengerDetails);
+        remove(payment);
     }  
  
     public static void main(String[] args){

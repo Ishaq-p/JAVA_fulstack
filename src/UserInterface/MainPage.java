@@ -29,6 +29,7 @@ public class MainPage extends JPanel{
 
     public JButton searchButton = new JButton("Search Flights");
 
+
     public MainPage(){
         // body 
         JPanel p_body = new JPanel(new GridLayout(2,1));  // 21
@@ -105,8 +106,6 @@ public class MainPage extends JPanel{
         this.searchButton.setPreferredSize(new Dimension(300,60));
         
 
-
-
         p_searchBottom.add(p_from);
         p_searchBottom.add(p_to);
         p_searchBottom.add(p_fromDate);
@@ -135,11 +134,6 @@ public class MainPage extends JPanel{
 
 
         add(p_body);
-
-        // setTitle("MainPage");
-        // setSize(1920,1080);
-        // setLocationRelativeTo(null);
-        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void showDatePicker(JTextField textField) {

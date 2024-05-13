@@ -9,9 +9,16 @@ import java.awt.*;
 public class FLightSelection extends JPanel{
 
     private String lbl_fromTo  = "<html><h2>02:00</h2><h3 style='color: gray;font-family: MuseoSans-900;'>IST</h3><h5 style='color: gray;font-family: MuseoSans-900;'>Istanbul</h5></html>";
-    
+    private ButtonGroup radGroup = new ButtonGroup();
+    public JButton btn_flightFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
+
+
 
     public FLightSelection(int flightNum){
+
+        // the button is assign above in the globle space
+        JPanel p_flightCheckout = new JPanel();
+        p_flightCheckout.add(btn_flightFinal, BorderLayout.EAST);
 
         if (flightNum>5){
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -27,13 +34,20 @@ public class FLightSelection extends JPanel{
                 p_window.add(eachFlight());
             }
             scrollPane.setViewportView(p_window);
+            p_flightCheckout.setBorder(new EmptyBorder(0,0,30,0));
+            add(p_flightCheckout);
         }else{
+            setLayout(new BorderLayout());
+            JPanel p_main = new JPanel();
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             for (int i=0;i<flightNum;i++){
                 panel.add(eachFlight());
             }
-            add(panel);
+            p_main.add(panel);
+            
+            add(p_main, BorderLayout.CENTER);
+            add(p_flightCheckout, BorderLayout.SOUTH);
         }
 
         
@@ -136,7 +150,6 @@ public class FLightSelection extends JPanel{
         p_buisness.add(p_lblBuis, BorderLayout.NORTH);
         p_buisness.add(p_selectionBuis, BorderLayout.CENTER);
 
-        ButtonGroup radGroup = new ButtonGroup();
         radGroup.add(rad_buisness);
         radGroup.add(rad_economy);
 
