@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
-import java.util.concurrent.Flow;
+import java.sql.Date;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -17,15 +17,32 @@ import org.jdatepicker.impl.DateComponentFormatter;
 
 public class MainPage extends JPanel{
 
-    private JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
-    private JRadioButton radBtn_oneWay = new JRadioButton("One Way");
-    private JRadioButton radBtn_multiCity = new JRadioButton("Multy City");
+    String[] uniqueFromAirports = {"JFK", "IST", "LHR", "CDG", "FRA", "MUC", "BCN", "LAX", "SYD", "ANK", "ADA", "ESB", "DLM", "AYT", "VAS", "TZX", "SZF", "EZS"};
+    String[] uniqueToAirports = {"IST", "JFK", "LHR", "CDG", "FRA", "MUC", "BCN", "LAX", "SYD", "ANK", "ADA", "ESB", "DLM", "AYT", "VAS", "TZX", "SZF", "EZS"};
 
-    private JTextField input_from = new JTextField(15);
-    private JTextField input_to = new JTextField(15);
-
+    private Properties p = new Properties();
     private UtilDateModel model = new UtilDateModel();
     private UtilDateModel model1 = new UtilDateModel();
+
+    private SpinnerNumberModel spinner = new SpinnerNumberModel(1,1,Integer.MAX_VALUE, 1);
+    private JSpinner passengerNum = new JSpinner(spinner);
+
+    private ButtonGroup radGroup = new ButtonGroup();
+    private JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
+    private JRadioButton radBtn_oneWay = new JRadioButton("One Way");
+
+    private JComboBox<String> input_from = new JComboBox<>(uniqueFromAirports);
+    private JComboBox<String> input_to = new JComboBox<>(uniqueToAirports);
+    private JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
+    private JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
+    
+    public String from;
+    public String to;
+    public Date departDate;
+    public Date arrivalDate;
+    public int passengerFinalNum;
+    public boolean oneWay;
+
 
     public JButton searchButton = new JButton("Search Flights");
 
@@ -49,11 +66,10 @@ public class MainPage extends JPanel{
         JPanel p_searchTopLeft = new JPanel();
         p_searchTopLeft.add(radBtn_roundTrip);
         p_searchTopLeft.add(radBtn_oneWay);
-        p_searchTopLeft.add(radBtn_multiCity);
-        ButtonGroup radGroup = new ButtonGroup();
+        // p_searchTopLeft.add(radBtn_multiCity);
         radGroup.add(radBtn_roundTrip);
         radGroup.add(radBtn_oneWay);
-        radGroup.add(radBtn_multiCity);
+        // radGroup.add(radBtn_multiCity);
         JPanel p_searchTopRight = new JPanel();
         p_searchTopRight.add(new JLabel("Gift a ticket"));
 
@@ -76,31 +92,26 @@ public class MainPage extends JPanel{
         p_toMini.add(input_to, BorderLayout.SOUTH);
         p_to.add(p_toMini);
 
-        Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
         JPanel p_fromDate = new JPanel(new FlowLayout());
         JPanel p_fromDateMini = new JPanel(new BorderLayout());
         JLabel lblFromDate = new JLabel("Departure:");
-        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
         p_fromDateMini.add(lblFromDate);
         p_fromDateMini.add(datePicker, BorderLayout.SOUTH);
         p_fromDate.add(p_fromDateMini);
         JPanel p_toDate = new JPanel(new FlowLayout());
         JPanel p_toDateMini = new JPanel(new BorderLayout());
         JLabel lblToDate = new JLabel("Arrival:");
-        JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
         p_toDateMini.add(lblToDate);
         p_toDateMini.add(datePicker1, BorderLayout.SOUTH);
         p_toDate.add(p_toDateMini);
 
         JPanel p_passengerNum = new JPanel(new FlowLayout());
         JLabel lblPassengerNum = new JLabel("Number of Passengers:");
-        SpinnerNumberModel spinner = new SpinnerNumberModel(1,1,Integer.MAX_VALUE, 1);
-        JSpinner passenderNum = new JSpinner(spinner);
         p_passengerNum.add(lblPassengerNum, BorderLayout.NORTH);
-        p_passengerNum.add(passenderNum, BorderLayout.SOUTH);
+        p_passengerNum.add(passengerNum, BorderLayout.SOUTH);
 
         // JButton searchButton = new JButton("Search Flights");
         this.searchButton.setPreferredSize(new Dimension(300,60));
@@ -126,9 +137,19 @@ public class MainPage extends JPanel{
         // searchButton.addActionListener(new ActionListener() {
         //     @Override
         //     public void actionPerformed(ActionEvent e){
-        //         add(new FLightSelection());
-        //         revalidate();
-        //         repaint();
+        //         from = (String) input_from.getText();
+        //         to = (String) input_to.getText();
+        //         departDate = (Date) datePicker.getModel().getValue();
+        //         arrivalDate = (Date) datePicker1.getModel().getValue();
+        //         passengerFinalNum = (int) passengerNum.getValue();
+        //         if (radBtn_oneWay.isSelected()){
+        //             oneWay = true;
+        //         }
+        //         else{
+        //             oneWay=false;
+        //         }
+        //         System.out.println(oneWay + " " + from + " " + to + " " + departDate + " " + arrivalDate + " " + passengerFinalNum);
+        //         emptyFields();
         //     }
         // });
 
@@ -155,6 +176,29 @@ public class MainPage extends JPanel{
         JPopupMenu popupMenu = new JPopupMenu();
         popupMenu.add(datePicker);
         popupMenu.show(textField, 0, textField.getHeight());
+    }
+
+
+    public void storeMainPageValues(){
+        this.from = (String) input_from.getSelectedItem();
+        this.to = (String) input_to.getSelectedItem();
+        this.departDate = (Date) datePicker.getModel().getValue();
+        this.arrivalDate = (Date) datePicker1.getModel().getValue();
+        this.passengerFinalNum = (int) passengerNum.getValue();
+        if (radBtn_oneWay.isSelected()){
+            this.oneWay = true;
+        }
+        else{
+            this.oneWay=false;
+        }
+    }
+    public void emptyMainPageFields(){
+        this.input_from.setSelectedItem(-1);;
+        this.input_to.setSelectedIndex(-1);
+        this.datePicker.getModel().setValue(null);
+        this.datePicker1.getModel().setValue(null);
+        this.passengerNum.setValue(1);
+        this.radGroup.clearSelection();
     }
 
     // public static void main(String[] args){

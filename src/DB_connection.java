@@ -122,12 +122,34 @@ public class DB_connection {
 
     // searching through flights
     public String[] flightSearch(String from, String to, Date date1, boolean Eclass, int passengersNum){
-        String query = (Eclass) ? "SELECT flightID FROM Flights WHERE from_=? AND to_=? AND departureTime=? AND E_seatsLeft>=?;" :"SELECT * FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND B_seatsLeft>=?;";
+        String query = (Eclass) ? "SELECT flightID FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND E_seatsLeft>=?;" :"SELECT * FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND B_seatsLeft>=?;";
         try (PreparedStatement statement = connection.prepareStatement(query)){
             statement.setString(1, from);
             statement.setString(2, to);
             statement.setDate(3, date1);
             statement.setInt(4, passengersNum);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+            List<String> flights = new ArrayList<>();
+            while (resultSet.next()) {
+                // Add relevant flight information to the flights list
+                flights.add(resultSet.getString("flightID"));
+            }
+            return flights.toArray(new String[0]);
+        }
+        }catch (SQLException e){
+            e.printStackTrace();
+            return new String[0];
+        }
+    }
+    public String[] flightSearch(String from, String to, Date date1, int passengersNum){
+        String query = "SELECT flightID FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND (E_seatsLeft>=? OR B_seatsLeft>=?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, from);
+            statement.setString(2, to);
+            statement.setDate(3, date1);
+            statement.setInt(4, passengersNum);
+            statement.setInt(5, passengersNum);
 
             try (ResultSet resultSet = statement.executeQuery()) {
             List<String> flights = new ArrayList<>();

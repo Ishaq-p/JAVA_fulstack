@@ -12,7 +12,7 @@ public class FLightSelection extends JPanel{
     private ButtonGroup radGroup = new ButtonGroup();
     public JButton btn_flightFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
 
-
+    public FLightSelection(){}
 
     public FLightSelection(int flightNum){
 

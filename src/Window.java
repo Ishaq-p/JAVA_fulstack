@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 
 
 public class Window extends JFrame{
@@ -21,8 +22,10 @@ public class Window extends JFrame{
     private MainPage mainPage = new MainPage();
     private SignUpPage signUpPage = new SignUpPage(); 
     private FLightSelection flightSelection = new FLightSelection(6);
-    private PassengerDetails passengerDetails = new PassengerDetails(6);
+    private PassengerDetails passengerDetails = new PassengerDetails();
     private Payment payment = new Payment();
+
+    private DB_connection dbConnection = new DB_connection();
 
     public Window(){
         setLayout(new BorderLayout());
@@ -113,9 +116,12 @@ public class Window extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e){
                 removePages();
+                mainPage.storeMainPageValues();
+                passengerDetails = new PassengerDetails(mainPage.passengerFinalNum);
                 add(flightSelection);
                 revalidate();
                 repaint();
+                mainPage.emptyMainPageFields();
             }
         });
         
@@ -162,7 +168,7 @@ public class Window extends JFrame{
         remove(flightSelection);
         remove(passengerDetails);
         remove(payment);
-    }  
+    }   
  
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {

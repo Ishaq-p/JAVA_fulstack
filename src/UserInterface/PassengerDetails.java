@@ -13,37 +13,13 @@ public class PassengerDetails extends JPanel{
 
     public JButton btn_passengerFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
 
+    public PassengerDetails(){}
 
     public PassengerDetails(int passengerNum){
 
         // the button is assign above in the globle space
         JPanel p_passengerCheckout = new JPanel();
         p_passengerCheckout.add(btn_passengerFinal, BorderLayout.EAST);
-
-
-
-        // JPanel p_contact = new JPanel(new BorderLayout());
-        // JPanel p_contactTitle = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
-        // JLabel lbl_contactTitle = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>Contact Info</h1> </html>");
-        // lbl_contactTitle.setBorder(new EmptyBorder(0,500,0,0));
-        // p_contactTitle.add(lbl_contactTitle, BorderLayout.CENTER);
-
-        // JPanel p_contactContents = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
-        // JPanel p_email = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        // JLabel lbl_email = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        // JTextField txt_email = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        // p_email.add(lbl_email, BorderLayout.NORTH);
-        // p_email.add(txt_email, BorderLayout.SOUTH);
-        // p_contactContents.add(p_email);
-        // JPanel p_number = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        // JLabel lbl_number = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        // JTextField txt_number = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        // p_number.add(lbl_number, BorderLayout.NORTH);
-        // p_number.add(txt_number, BorderLayout.SOUTH);
-        // p_contactContents.add(p_number);
-
-        // p_contact.add(p_contactTitle, BorderLayout.NORTH);
-        // p_contact.add(p_contactContents, BorderLayout.CENTER);
 
         if (passengerNum>4){
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
