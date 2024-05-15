@@ -2,12 +2,46 @@ package UserInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.Flow;
+import java.sql.Date;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.jdatepicker.impl.DateComponentFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 public class SignUpPage extends JPanel{
+    public String firstName;
+    public String lastName;
+    public String emial;
+    public String country;
+    public Date   dob;
+    public String title;
+    public String username;
+    public String password;
+    
+    private Properties p = new Properties();
+    private UtilDateModel model = new UtilDateModel();
+
+    private JTextField txt_firstname = new JTextField(15);
+    private JTextField txt_lastname = new JTextField(15);
+    private JTextField txt_email = new JTextField(15);
+    private JTextField txt_country = new JTextField(15);
+    private JDatePickerImpl txt_dob = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
+    private String[] titles = {"Mr.","Mrs."};
+    private JComboBox<String> txt_title = new JComboBox<>(titles){{setBackground(Color.WHITE);}};
+    private JTextField txt_username = new JTextField(15);
+    private JPasswordField txt_passwprd = new JPasswordField(15);
+
+    public JButton submitButton = new JButton("Create Account");
+
 
 
     public SignUpPage(){
@@ -39,7 +73,6 @@ public class SignUpPage extends JPanel{
         JPanel p_firstnameMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_firstname = new JLabel("First Name:");
         lbl_firstname.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_firstname = new JTextField(15);
         txt_firstname.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_firstnameMini.add(lbl_firstname, BorderLayout.NORTH);
         p_firstnameMini.add(txt_firstname, BorderLayout.SOUTH);
@@ -49,7 +82,6 @@ public class SignUpPage extends JPanel{
         JPanel p_lastnameMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_lastname = new JLabel("Last Name:");
         lbl_lastname.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_lastname = new JTextField(15);
         txt_lastname.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_lastnameMini.add(lbl_lastname, BorderLayout.NORTH);
         p_lastnameMini.add(txt_lastname, BorderLayout.SOUTH);
@@ -59,7 +91,6 @@ public class SignUpPage extends JPanel{
         JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_email = new JLabel("Email:");
         lbl_email.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_email = new JTextField(15);
         txt_email.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_emailMini.add(lbl_email, BorderLayout.NORTH);
         p_emailMini.add(txt_email, BorderLayout.SOUTH);
@@ -69,19 +100,20 @@ public class SignUpPage extends JPanel{
         JPanel p_countryMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_country = new JLabel("Nationality:");
         lbl_country.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_country = new JTextField(15);
         txt_country.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_countryMini.add(lbl_country, BorderLayout.NORTH);
         p_countryMini.add(txt_country, BorderLayout.SOUTH);
         p_country.add(p_countryMini);
 
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
         JPanel p_DobTitle = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         // p_DobTitle.setBorder(new EmptyBorder(0,150,0,0));
         JPanel p_DobTitleMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JPanel p_dobMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_dob = new JLabel("Date of Birth:");
         lbl_dob.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_dob = new JTextField(10);
         txt_dob.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_dobMini.add(lbl_dob, BorderLayout.NORTH);
         p_dobMini.add(txt_dob, BorderLayout.SOUTH);
@@ -89,7 +121,6 @@ public class SignUpPage extends JPanel{
         JPanel p_titleMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_title = new JLabel("Title:"){{setBackground(Color.WHITE);}};
         lbl_title.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_title = new JTextField(5);
         txt_title.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_titleMini.add(lbl_title, BorderLayout.NORTH);
         p_titleMini.add(txt_title, BorderLayout.SOUTH);
@@ -125,7 +156,6 @@ public class SignUpPage extends JPanel{
         JPanel p_usernameMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_username = new JLabel("Userame:");
         lbl_username.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JTextField txt_username = new JTextField(15);
         txt_username.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_usernameMini.add(lbl_username, BorderLayout.NORTH);
         p_usernameMini.add(txt_username, BorderLayout.SOUTH);
@@ -135,7 +165,6 @@ public class SignUpPage extends JPanel{
         JPanel p_passwordMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_password = new JLabel("Password:");
         lbl_password.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
-        JPasswordField txt_passwprd = new JPasswordField(15);
         txt_passwprd.setFont(new Font("MuseoSans-900", Font.PLAIN, 20));
         p_passwordMini.add(lbl_password, BorderLayout.NORTH);
         p_passwordMini.add(txt_passwprd, BorderLayout.SOUTH);
@@ -152,20 +181,54 @@ public class SignUpPage extends JPanel{
         // p_personalInfo2Parent.add(p_personalInfo2);
 
         JPanel p_submitButton = new JPanel(new FlowLayout(FlowLayout.CENTER)){{setBackground(Color.WHITE);}};
-        JButton submitButton = new JButton("Create Account");
         submitButton.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
         p_submitButton.add(submitButton);
 
-
+        
+    
         mainPanel.add(p_header);
         mainPanel.add(p_personalInfo1Parent);
         mainPanel.add(p_personalInfo2Parent);
         mainPanel.add(p_submitButton);
 
-
-
         add(mainPanel);
 
+    }
+
+    public void storeSignupData(){
+        this.firstName = this.txt_firstname.getText();
+        this.lastName = this.txt_lastname.getText();
+        this.emial = this.txt_email.getText();
+        this.country = this.txt_country.getText();
+        int[] dateInt = {this.txt_dob.getModel().getYear(), this.txt_dob.getModel().getMonth(), this.txt_dob.getModel().getDay()};
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dateInt[0], dateInt[1], dateInt[2]);
+        long miliSeconds = calendar.getTimeInMillis();
+        this.dob = new java.sql.Date(miliSeconds);
+        this.title = (String) this.txt_title.getSelectedItem();
+        this.username = this.txt_username.getText();
+        this.password = new String(this.txt_passwprd.getPassword());
+
+        // System.out.println(firstName+" "+lastName+" "+emial+" "+country+" "+dob+" "+title+" "+username+" "+password);
+    }
+
+    public void setToNull(){
+        this.txt_firstname.setText("");
+        this.txt_lastname.setText("");
+        this.txt_email.setText("submit");
+        this.txt_country.setText("");
+        this.txt_dob.getModel().setValue(null);
+        this.txt_title.setSelectedItem(-1);
+        this.txt_username.setText("");
+        this.txt_passwprd.setText("");
+    }
+
+    public boolean check4empty(){
+        if (this.txt_firstname.getText()=="" && this.txt_lastname.getText()=="" && this.txt_email.getText()=="" && this.txt_country.getText()=="" && this.txt_dob.getModel().getValue()==null && this.txt_username.getText()=="" && this.txt_passwprd.getPassword().length==0){
+            return false;
+        }else{
+            return true;
+        }
     }
     
 }

@@ -1,11 +1,5 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 // import java.time.LocalDate;
-import java.sql.Date;
+import java.sql.*;
 
 // needed for storing the credentials safely
 import java.io.FileInputStream;
@@ -73,9 +67,10 @@ public class DB_connection {
     // checkinkg for users either by their email or username
     public boolean check4user(String keyAttribute, boolean isEmail){
         String query = (isEmail) ? String.format("SELECT * FROM CustomerInfo WHERE email = '%s';", keyAttribute) : String.format("SELECT * FROM CustomerInfo WHERE username = '%s';", keyAttribute);
-        // System.out.println(query);
+        System.out.println(query);
         try (Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query)){
+            System.out.println(query);
             return resultSet.next();
         }catch (SQLException e){
                 e.printStackTrace();
@@ -119,52 +114,6 @@ public class DB_connection {
             return false;
         }
     }
-
-    // searching through flights
-    public String[] flightSearch(String from, String to, Date date1, boolean Eclass, int passengersNum){
-        String query = (Eclass) ? "SELECT flightID FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND E_seatsLeft>=?;" :"SELECT * FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND B_seatsLeft>=?;";
-        try (PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setString(1, from);
-            statement.setString(2, to);
-            statement.setDate(3, date1);
-            statement.setInt(4, passengersNum);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-            List<String> flights = new ArrayList<>();
-            while (resultSet.next()) {
-                // Add relevant flight information to the flights list
-                flights.add(resultSet.getString("flightID"));
-            }
-            return flights.toArray(new String[0]);
-        }
-        }catch (SQLException e){
-            e.printStackTrace();
-            return new String[0];
-        }
-    }
-    public String[] flightSearch(String from, String to, Date date1, int passengersNum){
-        String query = "SELECT flightID FROM Flights WHERE from_=? AND to_=? AND departureTime>=? AND (E_seatsLeft>=? OR B_seatsLeft>=?);";
-        try (PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setString(1, from);
-            statement.setString(2, to);
-            statement.setDate(3, date1);
-            statement.setInt(4, passengersNum);
-            statement.setInt(5, passengersNum);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-            List<String> flights = new ArrayList<>();
-            while (resultSet.next()) {
-                // Add relevant flight information to the flights list
-                flights.add(resultSet.getString("flightID"));
-            }
-            return flights.toArray(new String[0]);
-        }
-        }catch (SQLException e){
-            e.printStackTrace();
-            return new String[0];
-        }
-    }
-
     // getting info about a single flight using its flightID
     public String[] flightIDsearch(String flight_id){
         String query = String.format("SELECT * FROM Flights WHERE flightID='%s';", flight_id);

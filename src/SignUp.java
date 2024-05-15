@@ -2,10 +2,12 @@ import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import UserInterface.SignUpPage;
+
 // import javax.print.DocFlavor.STRING;
 
 
-public class signUp  extends DB_connection{
+public class SignUp  extends DB_connection{
 
     private static final String email_regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final Pattern pattern_email = Pattern.compile(email_regex);
@@ -21,15 +23,17 @@ public class signUp  extends DB_connection{
     private String password;
     private String email;
 
-    public signUp(String name, Date dob_, String country, String gender_, String usrname, String passcode, String Email){
+    private SignUpPage signUpPage = new SignUpPage();
+
+    public SignUp(String fulname, Date dob, String country, String title, String username, String passcode, String email){
         super();
-        this.fulName = name;
-        this.DOB = dob_;
+        this.fulName = fulname;
+        this.DOB = dob;
         this.nationality = country;
-        this.gender = gender_;
-        this.username = usrname;
+        this.gender = (title=="Mr.") ? "Male" : "Female";
+        this.username = username;
         this.password = passcode;
-        this.email = Email;
+        this.email = email;
     }
 
     public boolean inputValidity_email(){
@@ -57,15 +61,20 @@ public class signUp  extends DB_connection{
     }
 
     public boolean check4usrname(){
+        connect();
         boolean isUserExist = check4user(this.username, false);
+        disconnect();
         return isUserExist;
     } // done by the database object
     public boolean check4email(){
+        connect();
         boolean isUserExist = check4user(this.email, true);
+        disconnect();
         return isUserExist;
     }   //done by the database obj
     
     public boolean saveUser(){
+        connect();
         boolean isSaved = save_SignUp_user(this.fulName, 
                                             this.DOB, 
                                             this.nationality, 
@@ -73,8 +82,10 @@ public class signUp  extends DB_connection{
                                             this.username, 
                                             this.password, 
                                             this.email);
+        disconnect();
         return isSaved;
     }
+
 
     // public static void main(String[] args){
     //     signUp sign = new signUp("username_regex", null, "email_regex", "username_regex", "username_regex", "email_regex");

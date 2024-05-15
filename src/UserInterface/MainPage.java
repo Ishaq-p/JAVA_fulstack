@@ -1,10 +1,16 @@
 package UserInterface;
 
+import java.io.*;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.security.Timestamp;
 import java.util.Properties;
 import java.sql.Date;
 
@@ -38,10 +44,11 @@ public class MainPage extends JPanel{
     
     public String from;
     public String to;
-    public Date departDate;
+    public java.sql.Timestamp departDate;
     public Date arrivalDate;
     public int passengerFinalNum;
     public boolean oneWay;
+    public byte[] dateInBytes;
 
 
     public JButton searchButton = new JButton("Search Flights");
@@ -134,55 +141,27 @@ public class MainPage extends JPanel{
         p_body.add(p_bigImage);
         p_body.add(p_searchArea);
 
-        // searchButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e){
-        //         from = (String) input_from.getText();
-        //         to = (String) input_to.getText();
-        //         departDate = (Date) datePicker.getModel().getValue();
-        //         arrivalDate = (Date) datePicker1.getModel().getValue();
-        //         passengerFinalNum = (int) passengerNum.getValue();
-        //         if (radBtn_oneWay.isSelected()){
-        //             oneWay = true;
-        //         }
-        //         else{
-        //             oneWay=false;
-        //         }
-        //         System.out.println(oneWay + " " + from + " " + to + " " + departDate + " " + arrivalDate + " " + passengerFinalNum);
-        //         emptyFields();
-        //     }
-        // });
-
-
         add(p_body);
     }
 
-    private void showDatePicker(JTextField textField) {
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateComponentFormatter());
-        datePicker.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("dateSelected")) {
-                    textField.setText(datePicker.getJFormattedTextField().getText());
-                }
-            }
-        });
-        JPopupMenu popupMenu = new JPopupMenu();
-        popupMenu.add(datePicker);
-        popupMenu.show(textField, 0, textField.getHeight());
-    }
-
-
+    @SuppressWarnings("deprecation")
     public void storeMainPageValues(){
         this.from = (String) input_from.getSelectedItem();
         this.to = (String) input_to.getSelectedItem();
-        this.departDate = (Date) datePicker.getModel().getValue();
+        this.departDate = new java.sql.Timestamp(
+            (int) datePicker.getModel().getYear() - 1900, 
+            (int) datePicker.getModel().getMonth(), 
+            (int) datePicker.getModel().getDay(), 
+            0, 0, 0, 0
+        );
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+        try {
+            this.dateInBytes = convertToBytes(timestamp);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(this.departDate);
         this.arrivalDate = (Date) datePicker1.getModel().getValue();
         this.passengerFinalNum = (int) passengerNum.getValue();
         if (radBtn_oneWay.isSelected()){
@@ -201,6 +180,10 @@ public class MainPage extends JPanel{
         this.radGroup.clearSelection();
     }
 
+    // public String[] flightSearch(){
+    //     return String[];
+    // }
+
     // public static void main(String[] args){
     //     MainPage frame = new MainPage();
     //     frame.setTitle("main page");
@@ -209,4 +192,12 @@ public class MainPage extends JPanel{
 	// 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.setVisible(true);
     // }
+
+    public static byte[] convertToBytes(java.sql.Timestamp timestamp) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(timestamp);
+        oos.flush();
+        return baos.toByteArray();
+    }
 }

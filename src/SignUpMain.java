@@ -16,7 +16,7 @@ public class SignUpMain {
         LocalDate date = LocalDate.of(2001,12,11);
         Date sqlDate = Date.valueOf(date);
 
-        signUp signup = new signUp("Mohammad ishaq ", sqlDate, "Afghanistan", "Male", "shaqinair", "house1231", "khan@mail.com");
+        SignUp signup = new SignUp("Mohammad ishaq ", sqlDate, "Afghanistan", "Male", "shaqinair", "house1231", "khan@mail.com");
         signup.connect();
         
         System.out.println(signup.inputValidity_email());

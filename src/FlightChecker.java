@@ -25,32 +25,32 @@ public class FlightChecker extends DB_connection{
     }
 
     // seach for oneway and return flights
-    public String[][] searchFlights(){
-        String[] flightsFound1 = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
-        String[] flightsFound2 = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
+    // public String[][] searchFlights(){
+    //     String[] flightsFound1 = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
+    //     String[] flightsFound2 = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
 
-        return new String[][] {flightsFound1, flightsFound2};
-    }
+    //     return new String[][] {flightsFound1, flightsFound2};
+    // }
     
     // to see if one available
-    public boolean oneWay_flight(){
-        String[] flightsFound = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
-        if (flightsFound.length>0){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    // public boolean oneWay_flight(){
+    //     String[] flightsFound = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
+    //     if (flightsFound.length>0){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
     
     // to see if the return one is available
-    public boolean return_flight(){
-        String[] flightsFound = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
-        if (flightsFound.length>0){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    // public boolean return_flight(){
+    //     String[] flightsFound = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
+    //     if (flightsFound.length>0){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
     
     // flight details (suppose to use independent flight IDs since we will have many(oneway, round-way))
     public String[] flightDetails(String flight_id){

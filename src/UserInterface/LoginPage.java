@@ -64,8 +64,8 @@ public class LoginPage extends JFrame{
         setVisible(true);
     }
 
-    public static void main(String[] args){
-        // Create an instance of the LoginPage class
-        LoginPage loginPage = new LoginPage();
-    }
+    // public static void main(String[] args){
+    //     // Create an instance of the LoginPage class
+    //     LoginPage loginPage = new LoginPage();
+    // }
 }

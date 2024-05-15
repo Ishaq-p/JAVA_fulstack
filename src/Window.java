@@ -1,3 +1,4 @@
+import UserInterface.Alert;
 import UserInterface.FLightSelection;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
@@ -11,7 +12,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.security.Timestamp;
+import java.sql.*;
 
 
 public class Window extends JFrame{
@@ -26,6 +28,7 @@ public class Window extends JFrame{
     private Payment payment = new Payment();
 
     private DB_connection dbConnection = new DB_connection();
+    // private SignUp signup = new SignUp();
 
     public Window(){
         setLayout(new BorderLayout());
@@ -118,6 +121,7 @@ public class Window extends JFrame{
                 removePages();
                 mainPage.storeMainPageValues();
                 passengerDetails = new PassengerDetails(mainPage.passengerFinalNum);
+                
                 add(flightSelection);
                 revalidate();
                 repaint();
@@ -154,6 +158,36 @@ public class Window extends JFrame{
             }
         });
 
+        signUpPage.submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                boolean bool_empty = signUpPage.check4empty();
+                if (bool_empty){
+                    signUpPage.storeSignupData();
+                    // dbConnection.connect();
+
+                    SignUp signUp = new SignUp(signUpPage.firstName+" "+signUpPage.lastName
+                                                , signUpPage.dob
+                                                , signUpPage.country
+                                                , signUpPage.title
+                                                , signUpPage.username
+                                                , signUpPage.password
+                                                , signUpPage.emial);
+                    signUp.inputValidity_name();
+                    System.out.println(signUpPage.username);
+                    if (signUp.check4email() || signUp.check4usrname()){
+                        System.out.println("already exists;");
+                    }else{
+                        signUp.saveUser();
+                    }
+                    // dbConnection.disconnect();
+                    signUpPage.setToNull();
+                }else{
+                    new Alert();
+                }
+                
+            }
+        });
 
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
@@ -169,7 +203,7 @@ public class Window extends JFrame{
         remove(passengerDetails);
         remove(payment);
     }   
- 
+   
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             new Window();
