@@ -6,9 +6,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 public class Alert extends JFrame{
 
-    public Alert(){
+    public Alert(String display_text){
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel lbl = new JLabel("please fill all the imputs."){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
+        JLabel lbl = new JLabel(display_text){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
         panel.add(lbl, BorderLayout.CENTER);
 
         add(panel);

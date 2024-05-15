@@ -4,8 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LoginPage extends JFrame{
-    
-    public LoginPage(){
+    public String user_name; 
+    public String passcode; 
+
+    private JPasswordField password = new JPasswordField();
+    private JTextField username = new JTextField();
+    public JButton submit = new JButton("Submit");
+
+    public LoginPage(boolean bool){}
+    public void loginPage(){
         // Create a panel for login
         JPanel p_login = new JPanel(new GridBagLayout());
 
@@ -30,7 +37,6 @@ public class LoginPage extends JFrame{
         miniPanel.add(lbl_username, gbc);
 
         gbc.gridy++;
-        JTextField username = new JTextField();
         username.setPreferredSize(new Dimension(300, 50));
         username.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
         miniPanel.add(username, gbc);
@@ -41,13 +47,11 @@ public class LoginPage extends JFrame{
         miniPanel.add(lbl_password, gbc);
 
         gbc.gridy++;
-        JPasswordField password = new JPasswordField();
         password.setPreferredSize(new Dimension(300, 50));
         password.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
         miniPanel.add(password, gbc);
 
         gbc.gridy++;
-        JButton submit = new JButton("Submit");
         submit.setPreferredSize(new Dimension(300, 50));
         submit.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
         miniPanel.add(submit, gbc);
@@ -62,6 +66,24 @@ public class LoginPage extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setVisible(true);
+    }
+
+    public void storeValues(){
+        this.user_name = this.username.getText();
+        this.passcode =  new String(this.password.getPassword());
+    }
+
+    public boolean check4empty(){
+        if (this.username.getText()=="" || this.password.getPassword().length==0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public void setFieldsNull(){
+        this.username.setText("");
+        this.password.setText("");
     }
 
     // public static void main(String[] args){

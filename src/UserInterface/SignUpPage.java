@@ -215,7 +215,7 @@ public class SignUpPage extends JPanel{
     public void setToNull(){
         this.txt_firstname.setText("");
         this.txt_lastname.setText("");
-        this.txt_email.setText("submit");
+        this.txt_email.setText("");
         this.txt_country.setText("");
         this.txt_dob.getModel().setValue(null);
         this.txt_title.setSelectedItem(-1);
@@ -224,7 +224,8 @@ public class SignUpPage extends JPanel{
     }
 
     public boolean check4empty(){
-        if (this.txt_firstname.getText()=="" && this.txt_lastname.getText()=="" && this.txt_email.getText()=="" && this.txt_country.getText()=="" && this.txt_dob.getModel().getValue()==null && this.txt_username.getText()=="" && this.txt_passwprd.getPassword().length==0){
+        if (this.txt_firstname.getText() == "" || this.txt_lastname.getText() == "" || this.txt_email.getText() == "" || this.txt_country.getText() == "" || this.txt_dob.getModel().getValue() == null || this.txt_username.getText() == ""
+                || this.txt_passwprd.getPassword().length == 0){
             return false;
         }else{
             return true;

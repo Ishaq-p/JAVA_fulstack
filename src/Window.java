@@ -26,6 +26,7 @@ public class Window extends JFrame{
     private FLightSelection flightSelection = new FLightSelection(6);
     private PassengerDetails passengerDetails = new PassengerDetails();
     private Payment payment = new Payment();
+    private LoginPage loginPage = new LoginPage(true);
 
     private DB_connection dbConnection = new DB_connection();
     // private SignUp signup = new SignUp();
@@ -68,7 +69,7 @@ public class Window extends JFrame{
                     
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        new LoginPage();
+                        loginPage.loginPage();
                     }
                 });
             }else if (button=="SignUp"){
@@ -158,14 +159,16 @@ public class Window extends JFrame{
             }
         });
 
+
+        // signUp page final submit button action lisrener
         signUpPage.submitButton.addActionListener(new ActionListener() {
+            private boolean bool_empty=false;
             @Override
             public void actionPerformed(ActionEvent e){
-                boolean bool_empty = signUpPage.check4empty();
+                bool_empty = signUpPage.check4empty();
                 if (bool_empty){
+                    System.out.print("hello");
                     signUpPage.storeSignupData();
-                    // dbConnection.connect();
-
                     SignUp signUp = new SignUp(signUpPage.firstName+" "+signUpPage.lastName
                                                 , signUpPage.dob
                                                 , signUpPage.country
@@ -173,22 +176,43 @@ public class Window extends JFrame{
                                                 , signUpPage.username
                                                 , signUpPage.password
                                                 , signUpPage.emial);
-                    signUp.inputValidity_name();
-                    System.out.println(signUpPage.username);
-                    if (signUp.check4email() || signUp.check4usrname()){
-                        System.out.println("already exists;");
-                    }else{
-                        signUp.saveUser();
-                    }
+                    boolean submissionState = signUp.submitSignup();
                     // dbConnection.disconnect();
-                    signUpPage.setToNull();
+                    if (submissionState){
+                        signUpPage.setToNull();
+                    }
                 }else{
-                    new Alert();
+                    new Alert("Fill all the values!!");
                 }
-                
+            }
+        });
+        // signUp page final submit button action lisrener
+        loginPage.submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("hello1");
+                if (loginPage.check4empty()){
+                    System.out.println("hello2");
+                    loginPage.storeValues();
+                    Login login = new Login(loginPage.user_name, loginPage.passcode);
+                    if (login.logingIn()){
+                        System.out.println("hello3");
+                        new Alert("Logged in!!");
+                        loginPage.setFieldsNull();
+                        loginPage.dispose();
+                    }else{
+                        System.out.println("hello4");
+                        new Alert("username and password doesnt match!!");
+                    }
+
+                }else{
+                    System.out.println("hello5");
+                    new Alert("please fill all the fields!!");
+                }
             }
         });
 
+        
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
 
@@ -203,7 +227,7 @@ public class Window extends JFrame{
         remove(passengerDetails);
         remove(payment);
     }   
-   
+    
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             new Window();

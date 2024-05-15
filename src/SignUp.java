@@ -2,6 +2,7 @@ import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import UserInterface.Alert;
 import UserInterface.SignUpPage;
 
 // import javax.print.DocFlavor.STRING;
@@ -84,6 +85,23 @@ public class SignUp  extends DB_connection{
                                             this.email);
         disconnect();
         return isSaved;
+    }
+
+    public boolean submitSignup(){
+        if (this.inputValidity_email()){
+            this.inputValidity_name();
+            if (this.check4email() || this.check4usrname()){
+                new Alert("User already exists!!");
+                return false;
+            }else{
+                this.saveUser();
+                new Alert("User Saved!!");
+                return true;
+            }
+        }else{
+            new Alert("Not a valid email!");
+            return false;
+        }
     }
 
 
