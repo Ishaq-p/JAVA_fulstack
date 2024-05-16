@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.security.Timestamp;
+import java.util.Calendar;
 import java.util.Properties;
 import java.sql.Date;
 
@@ -34,7 +35,7 @@ public class MainPage extends JPanel{
     private JSpinner passengerNum = new JSpinner(spinner);
 
     private ButtonGroup radGroup = new ButtonGroup();
-    private JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
+    public JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
     private JRadioButton radBtn_oneWay = new JRadioButton("One Way");
 
     private JComboBox<String> input_from = new JComboBox<>(uniqueFromAirports);
@@ -44,11 +45,10 @@ public class MainPage extends JPanel{
     
     public String from;
     public String to;
-    public java.sql.Timestamp departDate;
+    public java.sql.Date departDate;
     public Date arrivalDate;
     public int passengerFinalNum;
     public boolean oneWay;
-    public byte[] dateInBytes;
 
 
     public JButton searchButton = new JButton("Search Flights");
@@ -127,11 +127,41 @@ public class MainPage extends JPanel{
         p_searchBottom.add(p_from);
         p_searchBottom.add(p_to);
         p_searchBottom.add(p_fromDate);
-        p_searchBottom.add(p_toDate);
-        p_searchBottom.add(p_passengerNum);
-        p_searchBottom.add(searchButton);
+        
+        
 
         // p_searchBottom.add(toDateButton);
+        radBtn_roundTrip.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (radBtn_roundTrip.isSelected()){
+                    p_searchBottom.remove(p_passengerNum);
+                    p_searchBottom.remove(searchButton);
+                    p_searchBottom.add(p_toDate);
+                    p_searchBottom.add(p_passengerNum);
+                    p_searchBottom.add(searchButton);
+                    revalidate();
+                    repaint();
+                }
+            }
+        });
+        radBtn_oneWay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (radBtn_oneWay.isSelected()){
+                    p_searchBottom.remove(p_passengerNum);
+                    p_searchBottom.remove(searchButton);
+                    p_searchBottom.remove(p_toDate);
+                    p_searchBottom.add(p_passengerNum);
+                    p_searchBottom.add(searchButton);
+                    revalidate();
+                    repaint();
+                }
+            }
+        });
+        
+        p_searchBottom.add(p_passengerNum);
+        p_searchBottom.add(searchButton);
 
         p_searchArea.add(p_searchTop, BorderLayout.NORTH);
         p_searchArea.add(p_searchBottom, BorderLayout.CENTER);
@@ -144,25 +174,25 @@ public class MainPage extends JPanel{
         add(p_body);
     }
 
-    @SuppressWarnings("deprecation")
+
     public void storeMainPageValues(){
         this.from = (String) input_from.getSelectedItem();
         this.to = (String) input_to.getSelectedItem();
-        this.departDate = new java.sql.Timestamp(
-            (int) datePicker.getModel().getYear() - 1900, 
-            (int) datePicker.getModel().getMonth(), 
-            (int) datePicker.getModel().getDay(), 
-            0, 0, 0, 0
-        );
-        java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
-        try {
-            this.dateInBytes = convertToBytes(timestamp);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
+        int[] dateInt = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
+        Calendar calender = Calendar.getInstance();
+        calender.set(dateInt[0], dateInt[1], dateInt[2]);
+        long miliSeconds = calender.getTimeInMillis();
+        this.departDate = new java.sql.Date(miliSeconds);
         System.out.println(this.departDate);
-        this.arrivalDate = (Date) datePicker1.getModel().getValue();
+
+        int[] dateInt1 = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
+        Calendar calender1 = Calendar.getInstance();
+        calender.set(dateInt1[0], dateInt1[1], dateInt1[2]);
+        long miliSeconds1 = calender1.getTimeInMillis();
+        this.arrivalDate = new java.sql.Date(miliSeconds1);
+        System.out.println(this.arrivalDate);
+        
         this.passengerFinalNum = (int) passengerNum.getValue();
         if (radBtn_oneWay.isSelected()){
             this.oneWay = true;
@@ -171,6 +201,8 @@ public class MainPage extends JPanel{
             this.oneWay=false;
         }
     }
+
+
     public void emptyMainPageFields(){
         this.input_from.setSelectedItem(-1);;
         this.input_to.setSelectedIndex(-1);
@@ -178,6 +210,20 @@ public class MainPage extends JPanel{
         this.datePicker1.getModel().setValue(null);
         this.passengerNum.setValue(1);
         this.radGroup.clearSelection();
+    }
+
+    public boolean check4Null(){ 
+        if (this.radGroup.getSelection()==null || 
+            this.datePicker.getModel().getValue()==null ||
+            // this.datePicker1.getModel().getValue()==null ||
+            this.input_from.getSelectedItem()==null || 
+            this.input_to.getSelectedItem()==null ){
+            
+            return false;
+        }else{
+            return true;
+        }
+        
     }
 
     // public String[] flightSearch(){
@@ -192,12 +238,4 @@ public class MainPage extends JPanel{
 	// 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.setVisible(true);
     // }
-
-    public static byte[] convertToBytes(java.sql.Timestamp timestamp) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(timestamp);
-        oos.flush();
-        return baos.toByteArray();
-    }
 }

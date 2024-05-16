@@ -11,9 +11,11 @@ public class LoginPage extends JFrame{
     private JTextField username = new JTextField();
     public JButton submit = new JButton("Submit");
 
-    public LoginPage(boolean bool){}
+    // void constructor
+    public LoginPage(){}
+
+    // the popup login page
     public void loginPage(){
-        // Create a panel for login
         JPanel p_login = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -21,7 +23,7 @@ public class LoginPage extends JFrame{
         gbc.gridy=0;
         gbc.insets = new Insets(10,10,10,10);
         
-        // Create a label for the header
+        // label for the header
         JPanel p_header = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel header = new JLabel("LogIn");
         header.setFont(new Font("MuseoSans-900", Font.BOLD, 40));

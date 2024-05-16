@@ -114,6 +114,30 @@ public class DB_connection {
             return false;
         }
     }
+
+    public String[] flightSearch(String from, String to, Date date1, int passengersNum){
+        String query = "SELECT flightID FROM Flights WHERE from_ = ? AND to_ = ? AND departureTime >= ? AND (B_seatsLeft >= ? OR B_seatsLeft >= ?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, from);
+            statement.setString(2, to);
+            statement.setDate(3, date1);
+            statement.setInt(4, passengersNum);
+            statement.setInt(5, passengersNum);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+            List<String> flights = new ArrayList<>();
+            while (resultSet.next()) {
+                // Add relevant flight information to the flights list
+                flights.add(resultSet.getString("flightID"));
+            }
+            return flights.toArray(new String[0]);
+        }
+        }catch (SQLException e){
+            e.printStackTrace();
+            return new String[0];
+        }
+    }
+
     // getting info about a single flight using its flightID
     public String[] flightIDsearch(String flight_id){
         String query = String.format("SELECT * FROM Flights WHERE flightID='%s';", flight_id);
@@ -122,7 +146,7 @@ public class DB_connection {
 
             List<String> flightsInfo = new ArrayList<>();
 
-            String[] columns = {"flightID", "from_", "to_", "planeID", "departureTime", "flightDuration", "E_seatsLeft", "B_seatsLeft", "destinationType"};
+            String[] columns = {"flightID", "from_", "to_", "planeID", "departureTime", "flightDuration", "E_seatsLeft", "B_seatsLeft", "destinationType", "ecoPrice", "buisPrice"};
             
             while (resultSet.next()){
                 for (String column : columns){

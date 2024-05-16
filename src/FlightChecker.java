@@ -10,51 +10,63 @@ public class FlightChecker extends DB_connection{
     private String username;
     private String flightID;
 
+    public FlightChecker(){}
     // constructor, just to assign the core variables
-    public FlightChecker(String from, String to, boolean roundTrip, Date date1, Date date2, boolean Eclass,  int passengersNum){
+    public FlightChecker(String from, String to, Date date1, Date date2,  int passengersNum){
         super();
         this.from = from;
         this.to = to;
-        this.roundTrip = roundTrip;
+        // this.roundTrip = roundTrip;
         this.date1 = date1;
         this.date2 = (this.roundTrip) ? date2 : null;
-        this.Eclass_bool = Eclass;
-        this.Eclass_int = (Eclass) ? 1 : 0;
+        // this.Eclass_bool = Eclass;
+        // this.Eclass_int = (Eclass) ? 1 : 0;
 
         this.passengersNum = passengersNum;
     }
 
     // seach for oneway and return flights
-    // public String[][] searchFlights(){
-    //     String[] flightsFound1 = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
-    //     String[] flightsFound2 = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
-
-    //     return new String[][] {flightsFound1, flightsFound2};
-    // }
+    public String[] searchFlights_oneway(){
+        connect();
+        String[] flightsFound1 = flightSearch(this.from, this.to, this.date1, this.passengersNum);
+        disconnect();
+        return flightsFound1;
+    }
+    public String[][] searchFlights_round(){
+        connect();
+        String[] flightsFound1 = flightSearch(this.from, this.to, this.date1, this.passengersNum);
+        String[] flightsFound2 = flightSearch(this.to, this.from, this.date2, this.passengersNum);
+        disconnect();
+        return new String[][] {flightsFound1, flightsFound2};
+    }
     
     // to see if one available
-    // public boolean oneWay_flight(){
-    //     String[] flightsFound = flightSearch(this.from, this.to, this.date1, this.Eclass_bool, this.passengersNum);
-    //     if (flightsFound.length>0){
-    //         return true;
-    //     }else{
-    //         return false;
-    //     }
-    // }
+    public boolean oneWay_flight(){
+        connect();
+        String[] flightsFound = flightSearch(this.from, this.to, this.date1, this.passengersNum);
+        disconnect();
+        if (flightsFound.length>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     // to see if the return one is available
-    // public boolean return_flight(){
-    //     String[] flightsFound = flightSearch(this.to, this.from, this.date2, this.Eclass_bool, this.passengersNum);
-    //     if (flightsFound.length>0){
-    //         return true;
-    //     }else{
-    //         return false;
-    //     }
-    // }
+    public boolean return_flight(){
+        String[] flightsFound = flightSearch(this.to, this.from, this.date2, this.passengersNum);
+        if (flightsFound.length>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     // flight details (suppose to use independent flight IDs since we will have many(oneway, round-way))
     public String[] flightDetails(String flight_id){
-        String[] details = flightIDsearch(flight_id);   
+        connect();
+        String[] details = flightIDsearch(flight_id); 
+        disconnect();  
         return details;
     }
     
@@ -106,19 +118,19 @@ public class FlightChecker extends DB_connection{
         }
     }
 
-    public static void main(String[] args){
-        LocalDate localDate = LocalDate.of(2024,5,3);
-        Date sqlDate = Date.valueOf(localDate);
+    // public static void main(String[] args){
+    //     LocalDate localDate = LocalDate.of(2024,5,3);
+    //     Date sqlDate = Date.valueOf(localDate);
 
-        FlightChecker flight = new FlightChecker("IST", "LHR", false, sqlDate, null, false, 3);
+    //     FlightChecker flight = new FlightChecker("IST", "LHR", false, sqlDate, null, false, 3);
 
-        flight.connect();
+    //     flight.connect();
         
-        // for (String i : flight.flightDetails(flight.fli))
-        // System.out.println(flight.flightDetails(null));
+    //     // for (String i : flight.flightDetails(flight.fli))
+    //     // System.out.println(flight.flightDetails(null));
 
-        flight.disconnect();
-    }
+    //     flight.disconnect();
+    // }
 
 
 }

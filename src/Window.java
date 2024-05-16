@@ -9,26 +9,34 @@ import UserInterface.SignUpPage;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.Timestamp;
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class Window extends JFrame{
+    private String flightID;
+    private boolean isEco;
+    private int numPassengers;
+
     private String[] barButtonsNames = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", "SignUp", "LogIn"};
     private int barRed=33, barGreen=37, barBlue=42;
     private Color navbarColor = new Color(barRed,barGreen,barBlue);
 
     private MainPage mainPage = new MainPage();
     private SignUpPage signUpPage = new SignUpPage(); 
-    private FLightSelection flightSelection = new FLightSelection(6);
+    private FLightSelection flightSelection = new FLightSelection();
     private PassengerDetails passengerDetails = new PassengerDetails();
     private Payment payment = new Payment();
-    private LoginPage loginPage = new LoginPage(true);
+    private LoginPage loginPage = new LoginPage();
 
     private DB_connection dbConnection = new DB_connection();
+    private FlightChecker flightChecker = new FlightChecker();
     // private SignUp signup = new SignUp();
 
     public Window(){
@@ -119,14 +127,31 @@ public class Window extends JFrame{
         mainPage.searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                removePages();
-                mainPage.storeMainPageValues();
-                passengerDetails = new PassengerDetails(mainPage.passengerFinalNum);
-                
-                add(flightSelection);
-                revalidate();
-                repaint();
-                mainPage.emptyMainPageFields();
+                boolean bool = mainPage.check4Null();
+                String[] flightIds;
+                List<String[]> flightDetails = new ArrayList<>();
+                if (bool){
+                    removePages();
+                    mainPage.storeMainPageValues();
+
+                    flightChecker = new FlightChecker(mainPage.from, mainPage.to, mainPage.departDate, mainPage.arrivalDate, mainPage.passengerFinalNum);
+                    flightIds = flightChecker.searchFlights_oneway();
+                    for (String i : flightIds){
+                        String[] flightInfo = flightChecker.flightDetails(i);
+                        flightDetails.add(flightInfo);
+                    }
+                    flightSelection = new FLightSelection(flightDetails);
+                    assingCrucialVars(mainPage.passengerFinalNum, flightSelection.flightSelected, flightSelection.isEco);
+
+                    passengerDetails = new PassengerDetails(numPassengers);
+                    
+                    add(flightSelection);
+                    revalidate();
+                    repaint();
+                    mainPage.emptyMainPageFields();
+                }else{
+                    new Alert("please fill all the feilds!!");
+                }
             }
         });
         
@@ -140,6 +165,9 @@ public class Window extends JFrame{
                 repaint();
             }
         });
+
+
+        // the problem is that, everything is set but still this button is not performing its task, in other words when i click it, th ebutton litrally doesn run
         flightSelection.btn_flightFinal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -167,7 +195,6 @@ public class Window extends JFrame{
             public void actionPerformed(ActionEvent e){
                 bool_empty = signUpPage.check4empty();
                 if (bool_empty){
-                    System.out.print("hello");
                     signUpPage.storeSignupData();
                     SignUp signUp = new SignUp(signUpPage.firstName+" "+signUpPage.lastName
                                                 , signUpPage.dob
@@ -190,29 +217,26 @@ public class Window extends JFrame{
         loginPage.submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println("hello1");
                 if (loginPage.check4empty()){
-                    System.out.println("hello2");
                     loginPage.storeValues();
                     Login login = new Login(loginPage.user_name, loginPage.passcode);
                     if (login.logingIn()){
-                        System.out.println("hello3");
                         new Alert("Logged in!!");
                         loginPage.setFieldsNull();
                         loginPage.dispose();
                     }else{
-                        System.out.println("hello4");
                         new Alert("username and password doesnt match!!");
                     }
 
                 }else{
-                    System.out.println("hello5");
                     new Alert("please fill all the fields!!");
                 }
             }
         });
 
         
+
+
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
 
@@ -227,7 +251,16 @@ public class Window extends JFrame{
         remove(passengerDetails);
         remove(payment);
     }   
-    
+
+    private void assingCrucialVars(int numPassengers, String flightID, boolean isEco){
+        this.flightID = flightID;
+        this.isEco = isEco;
+        this.numPassengers = numPassengers;
+    }
+
+    private void updatePassengersPage(){
+        this.passengerDetails = new PassengerDetails(this.numPassengers);
+    }
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             new Window();
