@@ -5,25 +5,33 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.jdatepicker.impl.DateComponentFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PassengerDetails extends JPanel{
 
-    public JButton btn_passengerFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
+    private JLabel lbl_title;
+    private int i;
+    
+    public boolean isThereNull;
+    public Map<String, FormField> listOfFields = new HashMap<>();
 
     public PassengerDetails(){}
 
     public PassengerDetails(int passengerNum){
-
-        // the button is assign above in the globle space
-        JPanel p_passengerCheckout = new JPanel();
-        p_passengerCheckout.add(btn_passengerFinal, BorderLayout.EAST);
-
-        if (passengerNum>4){
+        if (passengerNum>3){
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
             JScrollPane scrollPane = new JScrollPane();
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             add(scrollPane);
@@ -31,28 +39,23 @@ public class PassengerDetails extends JPanel{
             JPanel p_window = new JPanel();
             p_window.setLayout(new BoxLayout(p_window, BoxLayout.Y_AXIS));
 
-            for (int i=0;i<passengerNum;i++){
+            for (i=0;i<passengerNum;i++){
                 p_window.add(eachPassengerDetails());
+                this.lbl_title.setBorder(new EmptyBorder(0,500,0,0));
             }
-            // p_window.add(p_contact);
             scrollPane.setViewportView(p_window);
-            p_passengerCheckout.setBorder(new EmptyBorder(0,0,30,0));
-            add(p_passengerCheckout);
         }else{
             setLayout(new BorderLayout());
             JPanel p_main = new JPanel();
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            for (int i=0;i<passengerNum;i++){
+            for (i=0;i<passengerNum;i++){
                 panel.add(eachPassengerDetails());
             }
             p_main.add(panel);
             
             add(p_main, BorderLayout.CENTER);
-            add(p_passengerCheckout, BorderLayout.SOUTH);
-            // add(p_contact);
-        }
-        
+        } 
     }
 
 
@@ -60,9 +63,9 @@ public class PassengerDetails extends JPanel{
 
         JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.GREEN, 2));}};
         JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
-        JLabel lbl_title = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>1. Passenger Info</h1> </html>");
+        lbl_title = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>1. Passenger Info</h1> </html>");
         // lbl_title.setHorizontalAlignment(SwingConstants.CENTER);
-        lbl_title.setBorder(new EmptyBorder(0,500,0,0));
+        
         p_title.add(lbl_title, BorderLayout.CENTER);
 
 
@@ -104,12 +107,17 @@ public class PassengerDetails extends JPanel{
 
         JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
 
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        UtilDateModel model = new UtilDateModel();
+        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(model, p), new DateComponentFormatter());    
         JPanel p_dob = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_dobMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_dob = new JLabel("Date of Birth:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_dob = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_dobMini.add(lbl_dob, BorderLayout.NORTH);
-        p_dobMini.add(txt_dob, BorderLayout.CENTER);
+        p_dobMini.add(datePicker, BorderLayout.WEST);
         p_dob.add(p_dobMini);
 
         JCheckBox chk_turk = new JCheckBox("<html><h3 style='font-family: MuseoSans-900;'>&nbsp;&nbsp;Turkish Citizen</h3></html>"){{setBackground(Color.WHITE);}};
@@ -120,16 +128,29 @@ public class PassengerDetails extends JPanel{
         p_contents.add(p_contentTop, BorderLayout.CENTER);
         p_contents.add(p_contentBottom, BorderLayout.SOUTH);
 
-
-
         p_passenger.add(p_title, BorderLayout.NORTH);
         p_passenger.add(p_contents, BorderLayout.CENTER);
+
+        
+        listOfFields.put(i+"", new FormField(txt_name, txt_lasName, datePicker, rad_group, chk_turk));
 
         return p_passenger;
         // add(p_passenger);
 
+    }    
+
+    public void check4nulls(){
+        for(int i=0; i<listOfFields.size(); i++){
+            FormField lisOfvalues = listOfFields.get(i+"");
+            if(lisOfvalues.getFirstName().getText()=="" ||
+               lisOfvalues.getFirstName().getText()=="" ||
+               lisOfvalues.getDOB().getModel().getValue()==null||
+               lisOfvalues.getButtonGroup().getSelection()==null){
+                isThereNull= true;
+            }else{
+                isThereNull= false;
+            }
+
+        }
     }
-
-
-    
 }

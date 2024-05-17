@@ -16,12 +16,8 @@ public class FlightChecker extends DB_connection{
         super();
         this.from = from;
         this.to = to;
-        // this.roundTrip = roundTrip;
         this.date1 = date1;
         this.date2 = (this.roundTrip) ? date2 : null;
-        // this.Eclass_bool = Eclass;
-        // this.Eclass_int = (Eclass) ? 1 : 0;
-
         this.passengersNum = passengersNum;
     }
 

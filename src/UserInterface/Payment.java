@@ -1,14 +1,47 @@
 package UserInterface;
 
 import java.awt.*;
+import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.Flow;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
+import org.jdatepicker.impl.DateComponentFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 public class Payment extends JPanel{
 
-    public Payment(){
+    Properties p = new Properties();
+    UtilDateModel model = new UtilDateModel();
+
+    private ButtonGroup rad_group = new ButtonGroup();
+    private JRadioButton rad_MR = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mr.</h3></html>"){{setBackground(Color.WHITE);}};
+    private JRadioButton rad_MRs = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mrs.</h3></html>"){{setBackground(Color.WHITE);}};
+    private JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(model, p), new DateComponentFormatter());    
+    private JTextField txt_name = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_lasName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_number = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_frstName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_lastName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_email = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_cardNumber = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_expY = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_expM = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    private JTextField txt_CVC = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+    
+    public JButton btn_final = new JButton("Checkout");
+    public String firsName, lastName, gender, email;
+    public java.sql.Date dob;
+    public boolean isTurkish;
+    public boolean isThereNull;
+
+    String cardFirstName, cardLastName, phoneNumber, cardNumber, cardExp, cardCVC;
+
+    public Payment(boolean islogged){
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -16,8 +49,6 @@ public class Payment extends JPanel{
         JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.GREEN, 2));}};
         JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
         JLabel lbl_title = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>Personal Info</h1> </html>");
-        // lbl_title.setHorizontalAlignment(SwingConstants.CENTER);
-        // lbl_title.setBorder(new EmptyBorder(0,500,0,0));
         p_title.add(lbl_title, BorderLayout.CENTER);
 
 
@@ -26,9 +57,6 @@ public class Payment extends JPanel{
         // p_contents.setLayout(new BoxLayout(p_contents, BoxLayout.Y_AXIS));
 
         JPanel p_contentTop = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
-        JRadioButton rad_MR = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mr.</h3></html>"){{setBackground(Color.WHITE);}};
-        JRadioButton rad_MRs = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mrs.</h3></html>"){{setBackground(Color.WHITE);}};
-        ButtonGroup rad_group = new ButtonGroup();
         rad_group.add(rad_MRs);
         rad_group.add(rad_MR);
 
@@ -38,13 +66,11 @@ public class Payment extends JPanel{
 
         JPanel p_name = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_name = new JLabel("First Name:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_name = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_name.add(lbl_name, BorderLayout.NORTH);
         p_name.add(txt_name, BorderLayout.SOUTH);
         
         JPanel p_lasName = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_lasName = new JLabel("Last Name:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_lasName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_lasName.add(lbl_lasName, BorderLayout.NORTH);
         p_lasName.add(txt_lasName, BorderLayout.SOUTH);
 
@@ -59,18 +85,19 @@ public class Payment extends JPanel{
 
         JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
 
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
         JPanel p_dob = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_dobMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_dob = new JLabel("Date of Birth:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_dob = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_dobMini.add(lbl_dob, BorderLayout.NORTH);
-        p_dobMini.add(txt_dob, BorderLayout.CENTER);
+        p_dobMini.add(datePicker, BorderLayout.CENTER);
         p_dob.add(p_dobMini);
 
         JPanel p_number = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_numberMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_number = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_number = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        JLabel lbl_number = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_numberMini.add(lbl_number, BorderLayout.NORTH);
         p_numberMini.add(txt_number, BorderLayout.CENTER);
         p_number.add(p_numberMini);
@@ -86,13 +113,6 @@ public class Payment extends JPanel{
 
         p_passenger.add(p_title, BorderLayout.NORTH);
         p_passenger.add(p_contents, BorderLayout.CENTER);
-
-
-
-
-
-
-
 
 
 
@@ -112,7 +132,6 @@ public class Payment extends JPanel{
         JPanel p_frstName = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_frstNameMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_frstName = new JLabel("First Name:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_frstName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_frstNameMini.add(lbl_frstName, BorderLayout.NORTH);
         p_frstNameMini.add(txt_frstName, BorderLayout.CENTER);
         p_frstName.add(p_frstNameMini); 
@@ -121,7 +140,6 @@ public class Payment extends JPanel{
         JPanel p_lastName = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_lastNameMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_lastName = new JLabel("Last Name:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_lastName = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_lastNameMini.add(lbl_lastName, BorderLayout.NORTH);
         p_lastNameMini.add(txt_lastName, BorderLayout.CENTER);
         p_lastName.add(p_lastNameMini); 
@@ -129,8 +147,7 @@ public class Payment extends JPanel{
         // JPanel p_email = new JPanel(); 
         JPanel p_email = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_email = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_email = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        JLabel lbl_email = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_emailMini.add(lbl_email, BorderLayout.NORTH);
         p_emailMini.add(txt_email, BorderLayout.CENTER);
         p_email.add(p_emailMini); 
@@ -144,8 +161,7 @@ public class Payment extends JPanel{
         // JPanel p_cardNumber = new JPanel(); 
         JPanel p_cardNumber = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_cardNumberMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_cardNumber = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_cardNumber = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        JLabel lbl_cardNumber = new JLabel("Card Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_cardNumberMini.add(lbl_cardNumber, BorderLayout.NORTH);
         p_cardNumberMini.add(txt_cardNumber, BorderLayout.CENTER);
         p_cardNumber.add(p_cardNumberMini); 
@@ -155,7 +171,6 @@ public class Payment extends JPanel{
         JPanel p_expY = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_expYMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_expY = new JLabel("Exp Year:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_expY = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_expYMini.add(lbl_expY, BorderLayout.NORTH);
         p_expYMini.add(txt_expY, BorderLayout.CENTER);
         p_expY.add(p_expYMini); 
@@ -163,7 +178,6 @@ public class Payment extends JPanel{
         JPanel p_expM = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_expMmini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_expM = new JLabel("Exp Month:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_expM = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_expMmini.add(lbl_expM, BorderLayout.NORTH);
         p_expMmini.add(txt_expM, BorderLayout.CENTER);
         p_expM.add(p_expMmini); 
@@ -171,7 +185,6 @@ public class Payment extends JPanel{
         JPanel p_CVC = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_CVCmini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         JLabel lbl_CVC = new JLabel("CVC:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_CVC = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
         p_CVCmini.add(lbl_CVC, BorderLayout.NORTH);
         p_CVCmini.add(txt_CVC, BorderLayout.CENTER);
         p_CVC.add(p_CVCmini); 
@@ -193,16 +206,64 @@ public class Payment extends JPanel{
 
 
         JPanel p_button = new JPanel(new BorderLayout()){{setBorder(new LineBorder(Color.RED, 2)); setPreferredSize(new Dimension(p_paymentMain.getWidth(), 60));}};
-        JButton btn_final = new JButton("Checkout"){{setPreferredSize(new Dimension(300, p_button.getHeight()));}};
+        btn_final.setPreferredSize(new Dimension(300, p_button.getHeight()));
         p_button.add(btn_final, BorderLayout.EAST);
 
-
-        mainPanel.add(p_passenger);
-        mainPanel.add(p_paymentMain);
-        mainPanel.add(p_button);
+        
+        if(islogged){
+            mainPanel.add(p_paymentMain);
+            mainPanel.add(p_button);
+        }else{
+            mainPanel.add(p_passenger);
+            mainPanel.add(p_paymentMain);
+            mainPanel.add(p_button);
+        }       
+        
         // mainPanel.add(p_contact);
 
 
         add(mainPanel);
     }
+
+    public void storeValues(){
+        this.firsName = this.txt_name.getText();
+        this.lastName = this.txt_lasName.getText();
+        this.gender   = (rad_MR.isSelected()) ? "Male" : "Female";
+        this.email    = this.txt_email.getText();
+
+        int[] dateInt1 = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
+        Calendar calender1 = Calendar.getInstance();
+        calender1.set(dateInt1[0], dateInt1[1], dateInt1[2]);
+        long miliSeconds1 = calender1.getTimeInMillis();
+        this.dob = new java.sql.Date(miliSeconds1);
+        System.out.println(this.dob);
+        
+        this.cardFirstName = this.txt_frstName.getText();
+        this.cardLastName  = this.txt_lastName.getText();
+        this.phoneNumber   = this.txt_number.getText();
+        this.cardNumber    = this.txt_cardNumber.getText();
+        this.cardExp       = this.txt_expM.getText() +"/"+ this.txt_expY.getText();
+        this.cardCVC       = this.txt_CVC.getText();
+
+    }
+
+    public void check4nulls(){
+        if(this.txt_name.getText()=="" ||
+           this.txt_lasName.getText()=="" ||
+           this.rad_group.getSelection()==null ||
+           this.txt_email.getText()=="" ||
+           this.datePicker.getModel().getValue()==null ||
+           this.txt_frstName.getText()=="" ||
+           this.txt_lastName.getText()=="" ||
+           this.txt_number.getText()=="" ||
+           this.txt_cardNumber.getText()=="" ||
+           this.txt_expM.getText()=="" ||
+           this.txt_expY.getText()=="" ||
+           this.txt_CVC.getText()=="" ){
+            isThereNull=true;
+           }else{
+            isThereNull=false;
+           }
+    }
+
 }

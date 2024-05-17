@@ -46,7 +46,7 @@ public class MainPage extends JPanel{
     public String from;
     public String to;
     public java.sql.Date departDate;
-    public Date arrivalDate;
+    public java.sql.Date arrivalDate;
     public int passengerFinalNum;
     public boolean oneWay;
 
@@ -186,9 +186,9 @@ public class MainPage extends JPanel{
         this.departDate = new java.sql.Date(miliSeconds);
         System.out.println(this.departDate);
 
-        int[] dateInt1 = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
+        int[] dateInt1 = {this.datePicker1.getModel().getYear(), this.datePicker1.getModel().getMonth(), this.datePicker1.getModel().getDay()};
         Calendar calender1 = Calendar.getInstance();
-        calender.set(dateInt1[0], dateInt1[1], dateInt1[2]);
+        calender1.set(dateInt1[0], dateInt1[1], dateInt1[2]);
         long miliSeconds1 = calender1.getTimeInMillis();
         this.arrivalDate = new java.sql.Date(miliSeconds1);
         System.out.println(this.arrivalDate);

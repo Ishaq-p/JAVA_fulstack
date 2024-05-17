@@ -14,28 +14,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FLightSelection extends JPanel{
-    public String flightSelected;
+    public String flightSelected=null;
     public boolean isEco;
     private Map<JRadioButton, String> radioButtonFlightIdMap = new HashMap<>();
 
     private ButtonGroup radGroup = new ButtonGroup();
-    public JButton btn_flightFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
 
     private String flightID, from, to, departDateTime, departTime, arrivalTime, ecoPrice, buisPrice, flightDuration, planID, flightType, duration;
-    // private int duration;
-
-    // private FlightChecker flightChecker = new FLightSelection();
 
     public FLightSelection(){}
 
+
     public FLightSelection(List<String[]> flightDetails){
-
-        // the button is assign above in the globle space
-        JPanel p_flightCheckout = new JPanel();
-        p_flightCheckout.add(this.btn_flightFinal, BorderLayout.EAST);
-
-        
-
         if (flightDetails.size()>5){
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -51,8 +41,8 @@ public class FLightSelection extends JPanel{
                 p_window.add(eachFlight());
             }
             scrollPane.setViewportView(p_window);
-            p_flightCheckout.setBorder(new EmptyBorder(0,0,30,0));
-            add(p_flightCheckout);
+            // p_flightCheckout.setBorder(new EmptyBorder(0,0,30,0));
+            // add(p_flightCheckout);
 
         }else if (flightDetails.size()>0 && flightDetails.size()<=5){
             setLayout(new BorderLayout());
@@ -66,7 +56,7 @@ public class FLightSelection extends JPanel{
             p_main.add(panel);
             
             add(p_main, BorderLayout.CENTER);
-            add(p_flightCheckout, BorderLayout.SOUTH);
+            // add(p_flightCheckout, BorderLayout.SOUTH);
         }else{
             JPanel panel = new JPanel(){{setBackground(Color.WHITE);}};
             JLabel lbl = new JLabel("No Flights, please try choosing different destinations!"){{setBackground(Color.WHITE);setFont(new Font("MuseoSans-900", Font.BOLD, 32));}};
@@ -191,7 +181,6 @@ public class FLightSelection extends JPanel{
         p_flightType.add(p_economy);
         p_flightType.add(p_buisness);
 
-
         p_eachFlight.add(p_flightDetials);
         p_eachFlight.add(p_flightType);
 
@@ -255,5 +244,6 @@ public class FLightSelection extends JPanel{
         this.isEco = isEco;
         // System.out.println(this.flightSelected+" "+this.flightClass);
     }
+
 }
 
