@@ -23,6 +23,7 @@ public class Window extends JFrame{
     private String flightID;
     private boolean isEco;
     private int numPassengers;
+    private List<String[]> flightDetails = new ArrayList<>();
 
     private String[] barButtonsNames = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", "SignUp", "LogIn"};
     private int barRed=33, barGreen=37, barBlue=42;
@@ -35,7 +36,6 @@ public class Window extends JFrame{
     private Payment payment = new Payment();
     private LoginPage loginPage = new LoginPage();
 
-    private DB_connection dbConnection = new DB_connection();
     private FlightChecker flightChecker = new FlightChecker();
     // private SignUp signup = new SignUp();
 
@@ -103,8 +103,8 @@ public class Window extends JFrame{
                     }
                 });
             }else if (button=="Experience"){
+                
                 barBtn.addActionListener(new ActionListener() {
-                    
                     @Override
                     public void actionPerformed(ActionEvent e){
                         removePages();
@@ -129,7 +129,7 @@ public class Window extends JFrame{
             public void actionPerformed(ActionEvent e){
                 boolean bool = mainPage.check4Null();
                 String[] flightIds;
-                List<String[]> flightDetails = new ArrayList<>();
+                
                 if (bool){
                     removePages();
                     mainPage.storeMainPageValues();
@@ -140,12 +140,10 @@ public class Window extends JFrame{
                         String[] flightInfo = flightChecker.flightDetails(i);
                         flightDetails.add(flightInfo);
                     }
-                    flightSelection = new FLightSelection(flightDetails);
                     assingCrucialVars(mainPage.passengerFinalNum, flightSelection.flightSelected, flightSelection.isEco);
+                    assingFlightSelection();
 
-                    passengerDetails = new PassengerDetails(numPassengers);
-                    
-                    add(flightSelection);
+                    add(flightSelection, BorderLayout.CENTER);
                     revalidate();
                     repaint();
                     mainPage.emptyMainPageFields();
@@ -160,23 +158,23 @@ public class Window extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e){
                 removePages();
-                add(mainPage, BorderLayout.CENTER);
+                add(passengerDetails, BorderLayout.CENTER);
                 revalidate();
                 repaint();
             }
         });
-
 
         // the problem is that, everything is set but still this button is not performing its task, in other words when i click it, th ebutton litrally doesn run
         flightSelection.btn_flightFinal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 removePages();
-                add(passengerDetails, BorderLayout.CENTER);
+                add(mainPage, BorderLayout.CENTER);
                 revalidate();
                 repaint();
             }
         });
+        
         passengerDetails.btn_passengerFinal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -186,7 +184,6 @@ public class Window extends JFrame{
                 repaint();
             }
         });
-
 
         // signUp page final submit button action lisrener
         signUpPage.submitButton.addActionListener(new ActionListener() {
@@ -235,8 +232,6 @@ public class Window extends JFrame{
         });
 
         
-
-
         p_navBar.add(p_barButtons, BorderLayout.EAST);
         p_navBar.add(p_logo, BorderLayout.WEST);
 
@@ -258,9 +253,11 @@ public class Window extends JFrame{
         this.numPassengers = numPassengers;
     }
 
-    private void updatePassengersPage(){
+    private void assingFlightSelection(){
+        this.flightSelection = new FLightSelection(this.flightDetails);
         this.passengerDetails = new PassengerDetails(this.numPassengers);
     }
+    
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             new Window();

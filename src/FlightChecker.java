@@ -111,7 +111,7 @@ public class FlightChecker extends DB_connection{
             if (finalize){
                 System.out.println("Purchase process done, seats reserved!!");
             }else{
-                System.out.println("somthing went wront!!");
+                System.out.println("somthing went wrong!!");
             }
         }else{
             System.out.println("not enough seats available!!");

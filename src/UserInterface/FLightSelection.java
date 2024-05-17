@@ -32,7 +32,9 @@ public class FLightSelection extends JPanel{
 
         // the button is assign above in the globle space
         JPanel p_flightCheckout = new JPanel();
-        p_flightCheckout.add(btn_flightFinal, BorderLayout.EAST);
+        p_flightCheckout.add(this.btn_flightFinal, BorderLayout.EAST);
+
+        
 
         if (flightDetails.size()>5){
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
