@@ -1,5 +1,6 @@
 import UserInterface.Alert;
 import UserInterface.FLightSelection;
+import UserInterface.FormField;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
 import UserInterface.PassengerDetails;
@@ -17,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class Window extends JFrame{
@@ -33,6 +35,7 @@ public class Window extends JFrame{
     private JButton btn_flightFinal1 = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
     private JButton btn_flightFinal2 = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
     private JButton btn_passengerFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
+    private JButton btn_final = new JButton("Checkout");
 
     private JButton btn_flightFinal1_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
     private JButton btn_flightFinal2_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
@@ -54,9 +57,12 @@ public class Window extends JFrame{
     private FlightChecker flightChecker = new FlightChecker();
     private boolean isLoggedIn = false;
     private String loggedUsername;
+    private int loggedID;
+    private SignUp signUp;
     // private SignUp signup = new SignUp();
 
     public Window(){
+        setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         setTitle("MainPage");
         setSize(1920,1080);
@@ -179,7 +185,8 @@ public class Window extends JFrame{
                     removePages();
                     payment = new Payment(isLoggedIn);
                     add(payment, BorderLayout.CENTER);
-                    add(btn_payment_back, BorderLayout.SOUTH);
+                    bottomButtons(btn_payment_back, btn_final);
+                    add(p_bottomButtons, BorderLayout.SOUTH);
                     revalidate();
                     repaint();
                 }else{
@@ -188,20 +195,37 @@ public class Window extends JFrame{
             }
         });
 
-        payment.btn_final.addActionListener(new ActionListener() {
+        this.btn_final.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                payment.check4nulls();
+                if(!isLoggedIn){
+                    payment.check4nulls();
+                }else{
+                    payment.check4nulls_loggedIn();
+                }
+                System.out.println("isThereNull: "+payment.isThereNull);
                 if(!payment.isThereNull){
-                    removePages();
-                    mainPage.emptyMainPageFields();
-                    add(mainPage, BorderLayout.CENTER);
-                    revalidate();
-                    repaint();
-                    if(mainPage.oneWay){
-                        new Alert("ticket No:"+flightID1+" is purchased.");
+                    payment.storeValues();
+                    boolean submissionState = (isLoggedIn) ? true : saveNonLoggedUser();
+                    if(submissionState){
+                        boolean cardInfo_savingStatus = saveCardInfo();
+                        if (cardInfo_savingStatus){
+                            saveTicketHolders();
+                            removePages();
+                            mainPage.emptyMainPageFields();
+                            add(mainPage, BorderLayout.CENTER);
+                            revalidate();
+                            repaint();
+                            if(mainPage.oneWay){
+                                new Alert("ticket No:"+flightID1+" is purchased.");
+                            }else{
+                                new Alert("ticket No:"+flightID1+ "and No:"+flightID2+" are purchased.");
+                            }
+                        }else{
+                            new Alert("somth went wrong with card saving");
+                        }
                     }else{
-                        new Alert("ticket No:"+flightID1+ "and No:"+flightID2+" are purchased.");
+                        new Alert("somthing went wrong with signup");
                     }
                 }
                 else{
@@ -226,14 +250,16 @@ public class Window extends JFrame{
                                                 , signUpPage.password
                                                 , signUpPage.emial);
                     boolean submissionState = signUp.submitSignup();
+
                     // dbConnection.disconnect();
                     if (submissionState){
                         isLoggedIn=true;
                         loggedUsername = signUpPage.username;
                         remove(p_navBar);
-                        signUpPage.setToNull();
                         removePages();
-                        add(p_navBar, BorderLayout.NORTH);
+                        signUpPage.setToNull();
+                        changeBarButtons();
+                        add(navBar(barButtonsNames), BorderLayout.NORTH);
                         add(mainPage, BorderLayout.CENTER);
                         revalidate();
                         repaint();
@@ -446,6 +472,75 @@ public class Window extends JFrame{
         p_navBar.add(p_logo, BorderLayout.WEST);
         return p_navBar;
 
+    }
+    
+    private boolean saveNonLoggedUser(){
+        String country=null;
+        if(payment.isTurkish){
+            country = "Turkey";
+        }
+        this.signUp = new SignUp(payment.firsName+" "+payment.lastName, 
+                                   payment.dob,
+                                   country,
+                                   payment.gender,
+                                   "null",
+                                   "null",
+                                   payment.email);
+        return this.signUp.submitSignup();
+    }
+
+    private boolean saveCardInfo(){
+        DB_connection connection = new DB_connection();
+        connection.connect();
+        this.loggedID = (this.isLoggedIn) ? connection.getID_byusername(this.loggedUsername) : connection.getID(payment.email);
+        boolean cardSavingStatus = connection.saveCard(this.loggedID, payment.cardFirstName+" "+payment.cardLastName
+                            , payment.phoneNumber, payment.cardNumber, payment.cardExp, payment.cardCVC);
+
+        connection.disconnect();
+        return cardSavingStatus;
+    }
+    
+    private void saveTicketHolders(){
+        DB_connection connection = new DB_connection();
+        connection.connect();
+        for (int i=0; i<this.numPassengers; i++){
+            int turk = 0;
+            FormField form = passengerDetails.listOfFields.get(""+i);
+            if(form.getIsTurkish().isSelected()){
+                turk=1;
+            }
+            int[] dateInt1 = {form.getDOB().getModel().getYear(), form.getDOB().getModel().getMonth(), form.getDOB().getModel().getDay()};
+            Calendar calender1 = Calendar.getInstance();
+            calender1.set(dateInt1[0], dateInt1[1], dateInt1[2]);
+            long miliSeconds1 = calender1.getTimeInMillis();
+            Date dob = new java.sql.Date(miliSeconds1);
+            System.out.println(dob);
+
+            String title = "Mrs.";
+            if(form.getButtonGroup().isSelected()){
+                title = "Mr.";
+                System.out.println("title is selected");
+            }
+            connection.save_passenger_info(form.getFirstName().getText()+" "+form.getLastName().getText(),
+                                            dob,
+                                            title,
+                                            form.getEmail().getText(),
+                                            turk);
+
+            int tktHolderID = connection.getID_ticketHolder(form.getEmail().getText());
+            if(mainPage.oneWay){
+                int classE = (this.isEco1) ? 1 : 0;
+                connection.save2FlihgtCustm(tktHolderID, this.loggedID, this.flightID1, classE);
+            }else{
+                int classE1 = (this.isEco1) ? 1 : 0;
+                connection.save2FlihgtCustm(tktHolderID, this.loggedID, this.flightID1, classE1);
+                int classE2 = (this.isEco1) ? 1 : 0;
+                connection.save2FlihgtCustm(tktHolderID, this.loggedID, this.flightID2, classE2);
+            }
+        }
+        int classE = (this.isEco1) ? 1 : 0;
+        connection.flightsUpdate(this.flightID1, classE, this.numPassengers);
+        connection.disconnect();
     }
     
     public static void main(String[] args){

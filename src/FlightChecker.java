@@ -68,9 +68,9 @@ public class FlightChecker extends DB_connection{
     
     // has to be logged in before using this method !!!!
     // getting the customerID using username
-    public void user2cusID(){
-        this.customerID = this.username2customerID(this.username);  
-    }
+    // public void user2cusID(){
+    //     this.customerID = this.username2customerID(this.username);  
+    // }
 
     // see if the amount of seats available
     public boolean seatsAvailability(){
@@ -86,7 +86,7 @@ public class FlightChecker extends DB_connection{
     // the final process where the purchase is stored for the user
     // and the amount of seats are deducted from the Flights table row element
     public boolean finalizePurchase(){
-        boolean custPurchase_bool = this.cutomerPurchasedFlight(customerID, flightID, Eclass_int, passengersNum);
+        boolean custPurchase_bool = this.cutomerPurchasedFlight(customerID, flightID, Eclass_int);
         boolean  flightsTableUpdate = this.flightsUpdate(flightID, Eclass_int, passengersNum);
         if (custPurchase_bool && flightsTableUpdate){
             return true;
@@ -100,7 +100,7 @@ public class FlightChecker extends DB_connection{
     public void bookFlights(String flightID, String username, int E_class, int passengersNum){
         this.username = username;
         this.flightID = flightID;
-        user2cusID();
+        // user2cusID();
         boolean isSeatAvail = seatsAvailability();
         if (isSeatAvail){
             boolean  finalize = finalizePurchase();

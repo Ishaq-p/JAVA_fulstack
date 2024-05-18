@@ -6,15 +6,17 @@ import org.jdatepicker.impl.JDatePickerImpl;
 public class FormField {
     private JTextField textField1;
     private JTextField textField2;
+    private JTextField textField3;
     private JDatePickerImpl datePicker;
-    private ButtonGroup buttonGroup;
+    private JRadioButton buttonGroup;
     private JCheckBox checkBox;
 
     public FormField(){}
 
-    public FormField(JTextField textField1, JTextField textField2, JDatePickerImpl datePicker, ButtonGroup buttonGroup, JCheckBox checkBox) {
+    public FormField(JTextField textField1, JTextField textField2, JTextField textField3, JDatePickerImpl datePicker, JRadioButton buttonGroup, JCheckBox checkBox) {
         this.textField1 = textField1;
         this.textField2 = textField2;
+        this.textField3 = textField3;
         this.datePicker = datePicker;
         this.buttonGroup = buttonGroup;
         this.checkBox = checkBox;
@@ -35,6 +37,13 @@ public class FormField {
         this.textField2 = textField2;
     }
 
+    public JTextField getEmail() {
+        return textField3;
+    }
+    public void setEmail(JTextField textField2) {
+        this.textField3 = textField3;
+    }
+
     public JDatePickerImpl getDOB() {
         return datePicker;
     }
@@ -42,10 +51,10 @@ public class FormField {
         this.datePicker = datePicker;
     }
 
-    public ButtonGroup getButtonGroup() {
+    public JRadioButton getButtonGroup() {
         return buttonGroup;
     }
-    public void setButtonGroup(ButtonGroup buttonGroup) {
+    public void setButtonGroup(JRadioButton buttonGroup) {
         this.buttonGroup = buttonGroup;
     }
 

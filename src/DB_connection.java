@@ -65,8 +65,8 @@ public class DB_connection {
     }
     
     // checkinkg for users either by their email or username
-    public boolean check4user(String keyAttribute, boolean isEmail){
-        String query = (isEmail) ? String.format("SELECT * FROM CustomerInfo WHERE email = '%s';", keyAttribute) : String.format("SELECT * FROM CustomerInfo WHERE username = '%s';", keyAttribute);
+    public boolean check4user(String keyAttribute){
+        String query = String.format("SELECT * FROM CustomerInfo WHERE email = '%s';", keyAttribute);
         System.out.println(query);
         try (Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query)){
@@ -75,6 +75,42 @@ public class DB_connection {
         }catch (SQLException e){
                 e.printStackTrace();
                 return false;
+        }
+    }
+
+    public int getID(String email){
+        String query = String.format("SELECT id FROM CustomerInfo WHERE email = '%s';", email);
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query)){
+            resultSet.next();
+            return resultSet.getInt("id");
+        }catch (SQLException e){
+                e.printStackTrace();
+                return 0;
+        }
+    }
+    public int getID_byusername(String username){
+        String query = String.format("SELECT id FROM CustomerInfo WHERE username = '%s';", username);
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query)){
+            resultSet.next();
+            return resultSet.getInt("id");
+        }catch (SQLException e){
+                e.printStackTrace();
+                return 0;
+        }
+    }
+    public int getID_ticketHolder(String email){
+        String query = String.format("SELECT id FROM `TicketHolders` WHERE email = '%s';", email);
+        System.out.println(query);
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query)){
+            System.out.println(query);
+            resultSet.next();
+            return resultSet.getInt("id");
+        }catch (SQLException e){
+                e.printStackTrace();
+                return 0;
         }
     }
 
@@ -92,17 +128,17 @@ public class DB_connection {
     }
 
     // saving user's sigin up data
-    public boolean save_SignUp_user(String name, Date dob, String country, String gender, String usrname, String passcode, String email){
-        String query = "INSERT INTO `CustomerInfo` (`customerID`, `fulname`, `Nationality`, `DOB`, `gender`, `username`, `password`, `email`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    public boolean save_SignUp_user(String name, Date dob, String country, String gender, String usrname, String passcode, String email, int isTurk){
+        String query = "INSERT INTO `CustomerInfo` (`fulname`, `Nationality`, `DOB`, `gender`, `username`, `password`, `email`, `isTurk`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         try (PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setString(1, usrname);
-            statement.setString(2, name);
-            statement.setString(3, country);
-            statement.setDate(4, dob);
-            statement.setString(5, gender);
-            statement.setString(6, usrname);
-            statement.setString(7, passcode);
-            statement.setString(8, email);
+            statement.setString(1, name);
+            statement.setString(2, country);
+            statement.setDate(3, dob);
+            statement.setString(4, gender);
+            statement.setString(5, usrname);
+            statement.setString(6, passcode);
+            statement.setString(7, email);
+            statement.setInt(8, isTurk);
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                return true;
@@ -115,6 +151,28 @@ public class DB_connection {
         }
     }
 
+    public boolean save_passenger_info(String name, Date dob, String title, String email, int isTurk){
+        System.out.println(title);
+        String query = "INSERT INTO `TicketHolders` (`title`, `fulName`, `dob`, `email`, `isTurk`) VALUES (?, ?, ?, ?, ?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, title);
+            statement.setString(2, name);
+            statement.setDate(3, dob);
+            statement.setString(4, email);
+            statement.setInt(5, isTurk);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+               return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+ 
     public String[] flightSearch(String from, String to, Date date1, int passengersNum){
         String query = "SELECT flightID FROM Flights WHERE from_ = ? AND to_ = ? AND departureTime >= ? AND (B_seatsLeft >= ? OR B_seatsLeft >= ?);";
         try (PreparedStatement statement = connection.prepareStatement(query)){
@@ -160,23 +218,23 @@ public class DB_connection {
         }
     }
 
-    public String username2customerID(String username){
-        String query = String.format("SELECT customerID FROM CustomerInfo WHERE username='%s';", username);
-        try(Statement statement = connection.createStatement(); 
-            ResultSet resultSet = statement.executeQuery(query)){
-                if (resultSet.next()){
-                    return resultSet.getString("customerID");
-                }else{
-                    return "";
-                }
-            }catch (SQLException e){
-                e.printStackTrace();
-                return "";
-            }
-    }
+    // public String username2customerID(String username){
+    //     String query = String.format("SELECT customerID FROM CustomerInfo WHERE username='%s';", username);
+    //     try(Statement statement = connection.createStatement(); 
+    //         ResultSet resultSet = statement.executeQuery(query)){
+    //             if (resultSet.next()){
+    //                 return resultSet.getString("customerID");
+    //             }else{
+    //                 return "";
+    //             }
+    //         }catch (SQLException e){
+    //             e.printStackTrace();
+    //             return "";
+    //         }
+    // }
 
-    protected boolean cutomerPurchasedFlight(String customerID, String flightID, int E_class, int numSeats){
-        String query = String.format("INSERT INTO `FlightCustomers` (`customerID`, `flightID`, `class_E`, `num_seats`) VALUES ('%s', '%s', '%s', '%s');", customerID, flightID, E_class, numSeats);
+    protected boolean cutomerPurchasedFlight(String customerID, String flightID, int E_class){
+        String query = String.format("INSERT INTO `FlightCustomers` (`ticket_holder`, `customerID`, `flightID`, `class_E`) VALUES ('%s', '%s', '%s', '%s');", customerID, flightID, E_class);
         try (PreparedStatement statement = connection.prepareStatement(query)){
             int rowsInserted = statement.executeUpdate();
             
@@ -207,15 +265,50 @@ public class DB_connection {
         
     } 
 
-    // public static void main(String[] args){
-    //     DB_connection connection = new DB_connection();
+
+    public boolean saveCard(int buyerID, String name, String phone, String cardNumber, String expDate, String cvv) {
+        String query = "INSERT INTO CardInfo (customerID, fulName, phone, cardNumber, expDate, CVV) VALUES (?, ?, ?, ?, ?, ?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, buyerID);
+            statement.setString(2, name);
+            statement.setString(3, phone);
+            statement.setString(4, cardNumber);
+            statement.setString(5, expDate);
+            statement.setString(6, cvv);
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean save2FlihgtCustm(int tktHolder, int custID, String flightID, int class_E){
+        String query = "INSERT INTO FlightCustomers (ticket_holder, customerID, flightID, class_E) VALUES (?, ?, ?, ?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, tktHolder);
+            statement.setInt(2, custID);
+            statement.setString(3, flightID);
+            statement.setInt(4, class_E);
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public static void main(String[] args){
+        DB_connection connection = new DB_connection();
 
     //     LocalDate localDate = LocalDate.of(2024,5,3);
     //     Date sqlDate = Date.valueOf(localDate);
     //     connection.connect();
 
 
-    //     connection.connect();
+        connection.connect();
+        System.out.println(connection.getID("dsfdvd@kljfd.vd"));
     //     boolean bool = connection.check4user("ashleyalvarez58@gmail.com", true);
     //     System.out.println(bool);
 
@@ -249,9 +342,9 @@ public class DB_connection {
 
     //     System.out.println(connection.cutomerPurchasedFlight("root", "FLIGHT004", 1, 3));
     //     System.out.println(connection.flightsUpdate("FLIGHT004", 1, 3));
-    //     connection.disconnect();
+        connection.disconnect();
 
-    // }
+    }
 
 
 }

@@ -5,8 +5,9 @@ import java.util.regex.Pattern;
 import UserInterface.Alert;
 import UserInterface.SignUpPage;
 
-// import javax.print.DocFlavor.STRING;
+import java.sql.Date;
 
+// import javax.print.DocFlavor.STRING;
 
 public class SignUp  extends DB_connection{
 
@@ -24,7 +25,11 @@ public class SignUp  extends DB_connection{
     private String password;
     private String email;
 
+    public int id;
+
     private SignUpPage signUpPage = new SignUpPage();
+
+    public SignUp(){}
 
     public SignUp(String fulname, Date dob, String country, String title, String username, String passcode, String email){
         super();
@@ -38,6 +43,7 @@ public class SignUp  extends DB_connection{
     }
 
     public boolean inputValidity_email(){
+        System.out.println(this.email);
         Matcher match = pattern_email.matcher(this.email);
         return match.matches();
     }
@@ -61,36 +67,33 @@ public class SignUp  extends DB_connection{
         this.fulName = final_fulname.replaceAll("^\\s+|\\s+$", "");
     }
 
-    public boolean check4usrname(){
-        connect();
-        boolean isUserExist = check4user(this.username, false);
-        disconnect();
-        return isUserExist;
-    } // done by the database object
     public boolean check4email(){
         connect();
-        boolean isUserExist = check4user(this.email, true);
+        boolean isUserExist = check4user(this.email);
         disconnect();
         return isUserExist;
     }   //done by the database obj
     
     public boolean saveUser(){
         connect();
+        int isTurk = (this.nationality=="Turkey" || this.nationality=="turkey") ? 1:0;
         boolean isSaved = save_SignUp_user(this.fulName, 
                                             this.DOB, 
                                             this.nationality, 
                                             this.gender, 
                                             this.username, 
                                             this.password, 
-                                            this.email);
+                                            this.email,
+                                            isTurk);
         disconnect();
         return isSaved;
     }
 
     public boolean submitSignup(){
+        System.out.println("email: "+this.email);
         if (this.inputValidity_email()){
             this.inputValidity_name();
-            if (this.check4email() || this.check4usrname()){
+            if (this.check4email()){
                 new Alert("User already exists!!");
                 return false;
             }else{
@@ -104,12 +107,21 @@ public class SignUp  extends DB_connection{
         }
     }
 
+    public int setID(String email){
+        connect();
+        int id = getID(email);
+        System.out.println("signUp: "+id+" "+email);
+        disconnect();
+        return id;
+    }
+
 
     // public static void main(String[] args){
-    //     signUp sign = new signUp("username_regex", null, "email_regex", "username_regex", "username_regex", "email_regex");
-
-    //     String name = sign.inputValidity_name();
-    //     System.out.println(name);
+    //     @SuppressWarnings("deprecation")
+    //     Date date = new Date(22, 2, 2);
+    //     SignUp sign = new SignUp("hell khan", date, "email_regex", "username_regex", "username_regex", "email_regex", "cds@vd.vd");
+    //     sign.setID();
+    //     System.out.println("this is: "+sign.id);
     // }
     
 }

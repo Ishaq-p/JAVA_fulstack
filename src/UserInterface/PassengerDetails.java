@@ -120,8 +120,17 @@ public class PassengerDetails extends JPanel{
         p_dobMini.add(datePicker, BorderLayout.WEST);
         p_dob.add(p_dobMini);
 
+        JPanel p_email = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
+        JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
+        JLabel lbl_email = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        JTextField txt_email = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        p_emailMini.add(lbl_email, BorderLayout.NORTH);
+        p_emailMini.add(txt_email, BorderLayout.CENTER);
+        p_email.add(p_emailMini); 
+
         JCheckBox chk_turk = new JCheckBox("<html><h3 style='font-family: MuseoSans-900;'>&nbsp;&nbsp;Turkish Citizen</h3></html>"){{setBackground(Color.WHITE);}};
         
+        p_contentBottom.add(p_email);
         p_contentBottom.add(p_dob);
         p_contentBottom.add(chk_turk);
 
@@ -132,7 +141,7 @@ public class PassengerDetails extends JPanel{
         p_passenger.add(p_contents, BorderLayout.CENTER);
 
         
-        listOfFields.put(i+"", new FormField(txt_name, txt_lasName, datePicker, rad_group, chk_turk));
+        listOfFields.put(i+"", new FormField(txt_name, txt_lasName, txt_email, datePicker, rad_MR, chk_turk));
 
         return p_passenger;
         // add(p_passenger);
@@ -144,8 +153,9 @@ public class PassengerDetails extends JPanel{
             FormField lisOfvalues = listOfFields.get(i+"");
             if(lisOfvalues.getFirstName().getText()=="" ||
                lisOfvalues.getFirstName().getText()=="" ||
+               lisOfvalues.getEmail().getText()=="" ||
                lisOfvalues.getDOB().getModel().getValue()==null||
-               lisOfvalues.getButtonGroup().getSelection()==null){
+               (lisOfvalues.getButtonGroup().isSelected()==true && lisOfvalues.getButtonGroup().isSelected()==false)){
                 isThereNull= true;
             }else{
                 isThereNull= false;

@@ -33,13 +33,12 @@ public class Payment extends JPanel{
     private JTextField txt_expM = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
     private JTextField txt_CVC = new JTextField(5){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
     
-    public JButton btn_final = new JButton("Checkout");
     public String firsName, lastName, gender, email;
     public java.sql.Date dob;
     public boolean isTurkish;
     public boolean isThereNull;
 
-    String cardFirstName, cardLastName, phoneNumber, cardNumber, cardExp, cardCVC;
+    public String cardFirstName, cardLastName, phoneNumber, cardNumber, cardExp, cardCVC;
 
     public Payment(boolean islogged){
 
@@ -95,16 +94,16 @@ public class Payment extends JPanel{
         p_dobMini.add(datePicker, BorderLayout.CENTER);
         p_dob.add(p_dobMini);
 
-        JPanel p_number = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
-        JPanel p_numberMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_number = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        p_numberMini.add(lbl_number, BorderLayout.NORTH);
-        p_numberMini.add(txt_number, BorderLayout.CENTER);
-        p_number.add(p_numberMini);
+        JPanel p_email = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
+        JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
+        JLabel lbl_email = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        p_emailMini.add(lbl_email, BorderLayout.NORTH);
+        p_emailMini.add(txt_email, BorderLayout.CENTER);
+        p_email.add(p_emailMini);
 
         JCheckBox chk_turk = new JCheckBox("<html><h3 style='font-family: MuseoSans-900;'>&nbsp;&nbsp;Turkish Citizen</h3></html>"){{setBackground(Color.WHITE);}};
         
-        p_contentBottom.add(p_number);
+        p_contentBottom.add(p_email);
         p_contentBottom.add(p_dob);
         p_contentBottom.add(chk_turk);
 
@@ -145,16 +144,16 @@ public class Payment extends JPanel{
         p_lastName.add(p_lastNameMini); 
 
         // JPanel p_email = new JPanel(); 
-        JPanel p_email = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
-        JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_email = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        p_emailMini.add(lbl_email, BorderLayout.NORTH);
-        p_emailMini.add(txt_email, BorderLayout.CENTER);
-        p_email.add(p_emailMini); 
+        JPanel p_number = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
+        JPanel p_numberMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
+        JLabel lbl_number = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        p_numberMini.add(lbl_number, BorderLayout.NORTH);
+        p_numberMini.add(txt_number, BorderLayout.CENTER);
+        p_number.add(p_numberMini); 
 
         p_personalInfo.add(p_frstName);
         p_personalInfo.add(p_lastName);
-        p_personalInfo.add(p_email);
+        p_personalInfo.add(p_number);
 
 
         JPanel p_cardinfoMini = new JPanel(new BorderLayout());
@@ -205,18 +204,18 @@ public class Payment extends JPanel{
         p_paymentMain.add(p_cardInfo, BorderLayout.CENTER);
 
 
-        JPanel p_button = new JPanel(new BorderLayout()){{setBorder(new LineBorder(Color.RED, 2)); setPreferredSize(new Dimension(p_paymentMain.getWidth(), 60));}};
-        btn_final.setPreferredSize(new Dimension(300, p_button.getHeight()));
-        p_button.add(btn_final, BorderLayout.EAST);
+        // JPanel p_button = new JPanel(new BorderLayout()){{setBorder(new LineBorder(Color.RED, 2)); setPreferredSize(new Dimension(p_paymentMain.getWidth(), 60));}};
+        // btn_final.setPreferredSize(new Dimension(300, p_button.getHeight()));
+        // p_button.add(btn_final, BorderLayout.EAST);
 
         
         if(islogged){
             mainPanel.add(p_paymentMain);
-            mainPanel.add(p_button);
+            // mainPanel.add(p_button);
         }else{
             mainPanel.add(p_passenger);
             mainPanel.add(p_paymentMain);
-            mainPanel.add(p_button);
+            // mainPanel.add(p_button);
         }       
         
         // mainPanel.add(p_contact);
@@ -226,6 +225,7 @@ public class Payment extends JPanel{
     }
 
     public void storeValues(){
+        System.out.println("email at core: "+this.txt_email.getText());
         this.firsName = this.txt_name.getText();
         this.lastName = this.txt_lasName.getText();
         this.gender   = (rad_MR.isSelected()) ? "Male" : "Female";
@@ -247,23 +247,41 @@ public class Payment extends JPanel{
 
     }
 
-    public void check4nulls(){
-        if(this.txt_name.getText()=="" ||
-           this.txt_lasName.getText()=="" ||
-           this.rad_group.getSelection()==null ||
-           this.txt_email.getText()=="" ||
-           this.datePicker.getModel().getValue()==null ||
-           this.txt_frstName.getText()=="" ||
-           this.txt_lastName.getText()=="" ||
-           this.txt_number.getText()=="" ||
-           this.txt_cardNumber.getText()=="" ||
-           this.txt_expM.getText()=="" ||
-           this.txt_expY.getText()=="" ||
-           this.txt_CVC.getText()=="" ){
-            isThereNull=true;
-           }else{
-            isThereNull=false;
-           }
+    public void check4nulls() {
+        if (isTextFieldEmpty(this.txt_name) ||
+            isTextFieldEmpty(this.txt_lasName) ||
+            isTextFieldEmpty(this.txt_frstName) ||
+            isTextFieldEmpty(this.txt_lastName) ||
+            isTextFieldEmpty(this.txt_email) ||
+            isTextFieldEmpty(this.txt_number) ||
+            isTextFieldEmpty(this.txt_cardNumber) ||
+            isTextFieldEmpty(this.txt_expM) ||
+            isTextFieldEmpty(this.txt_expY) ||
+            isTextFieldEmpty(this.txt_CVC) ||
+            this.rad_group.getSelection() == null ||
+            this.datePicker.getModel().getValue() == null) {
+            isThereNull = true;
+        } else {
+            isThereNull = false;
+        }
+    }
+    public void check4nulls_loggedIn() {
+            if(isTextFieldEmpty(this.txt_frstName) ||
+            isTextFieldEmpty(this.txt_lastName) ||
+            isTextFieldEmpty(this.txt_number) ||
+            isTextFieldEmpty(this.txt_cardNumber) ||
+            isTextFieldEmpty(this.txt_expM) ||
+            isTextFieldEmpty(this.txt_expY) ||
+            isTextFieldEmpty(this.txt_CVC) ) {
+            isThereNull = true;
+        } else {
+            isThereNull = false;
+        }
+    }
+    
+    
+    private boolean isTextFieldEmpty(JTextField textField) {
+        return textField.getText().trim().isEmpty();
     }
 
 }

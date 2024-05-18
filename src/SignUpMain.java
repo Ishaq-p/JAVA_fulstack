@@ -24,7 +24,6 @@ public class SignUpMain {
         System.out.println(signup.inputValidity_pass());
         System.out.println(signup.inputValidity_usrname());
         System.out.println(signup.check4email());
-        System.out.println(signup.check4usrname());
 
         if (signup.inputValidity_email() && signup.inputValidity_pass() && signup.inputValidity_usrname()){
             if (signup.check4email() && signup.check4email()){
