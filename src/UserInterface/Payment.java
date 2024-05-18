@@ -38,6 +38,8 @@ public class Payment extends JPanel{
     public boolean isTurkish;
     public boolean isThereNull;
 
+    public long miliSeconds1;
+
     public String cardFirstName, cardLastName, phoneNumber, cardNumber, cardExp, cardCVC;
 
     public Payment(boolean islogged){
@@ -45,17 +47,17 @@ public class Payment extends JPanel{
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-        JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.GREEN, 2));}};
-        JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(SystemColor.window, 2));}};
+        JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         JLabel lbl_title = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>Personal Info</h1> </html>");
         p_title.add(lbl_title, BorderLayout.CENTER);
 
 
-        JPanel p_contents = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contents = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         p_contents.setPreferredSize(new Dimension(800, 160));
         // p_contents.setLayout(new BoxLayout(p_contents, BoxLayout.Y_AXIS));
 
-        JPanel p_contentTop = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contentTop = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         rad_group.add(rad_MRs);
         rad_group.add(rad_MR);
 
@@ -82,7 +84,7 @@ public class Payment extends JPanel{
         p_contentTop.add(p_lasName);
 
 
-        JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
 
         p.put("text.today", "Today");
         p.put("text.month", "Month");
@@ -115,16 +117,16 @@ public class Payment extends JPanel{
 
 
 
-        JPanel p_paymentMain = new JPanel(new BorderLayout()){{setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_paymentMain = new JPanel(new BorderLayout()){{setBorder(new LineBorder(Color.WHITE, 2));setBackground(Color.WHITE);}};
 
         // JPanel p_paymentTitle = new JPanel();
-        JPanel p_paymentTitle = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_paymentTitle = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         JLabel lbl_paymentTitle = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>Card Info</h1> </html>");
         p_paymentTitle.add(lbl_paymentTitle, BorderLayout.CENTER);
 
-        JPanel p_cardInfo = new JPanel(new FlowLayout());
+        JPanel p_cardInfo = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
 
-        JPanel p_personalInfo = new JPanel();
+        JPanel p_personalInfo = new JPanel(){{setBackground(Color.WHITE);}};
         p_personalInfo.setLayout(new BoxLayout(p_personalInfo, BoxLayout.Y_AXIS));
         
         // JPanel p_frstName = new JPanel();
@@ -156,7 +158,7 @@ public class Payment extends JPanel{
         p_personalInfo.add(p_number);
 
 
-        JPanel p_cardinfoMini = new JPanel(new BorderLayout());
+        JPanel p_cardinfoMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         // JPanel p_cardNumber = new JPanel(); 
         JPanel p_cardNumber = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_cardNumberMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
@@ -165,7 +167,7 @@ public class Payment extends JPanel{
         p_cardNumberMini.add(txt_cardNumber, BorderLayout.CENTER);
         p_cardNumber.add(p_cardNumberMini); 
 
-        JPanel p_cardDetails = new JPanel(new FlowLayout()); 
+        JPanel p_cardDetails = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}}; 
 
         JPanel p_expY = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_expYMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
@@ -234,8 +236,8 @@ public class Payment extends JPanel{
         int[] dateInt1 = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
         Calendar calender1 = Calendar.getInstance();
         calender1.set(dateInt1[0], dateInt1[1], dateInt1[2]);
-        long miliSeconds1 = calender1.getTimeInMillis();
-        this.dob = new java.sql.Date(miliSeconds1);
+        this.miliSeconds1 = calender1.getTimeInMillis();
+        this.dob = new java.sql.Date(this.miliSeconds1);
         System.out.println(this.dob);
         
         this.cardFirstName = this.txt_frstName.getText();

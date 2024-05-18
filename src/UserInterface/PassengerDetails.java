@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class PassengerDetails extends JPanel{
@@ -26,6 +27,7 @@ public class PassengerDetails extends JPanel{
     
     public boolean isThereNull;
     public Map<String, FormField> listOfFields = new HashMap<>();
+    public long dob_miliSeconds;
 
     public PassengerDetails(){}
 
@@ -61,19 +63,19 @@ public class PassengerDetails extends JPanel{
 
     public JPanel eachPassengerDetails(){
 
-        JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.GREEN, 2));}};
-        JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
-        lbl_title = new JLabel("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>1. Passenger Info</h1> </html>");
+        JPanel p_passenger = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(SystemColor.window, 2));}};
+        JPanel p_title = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
+        lbl_title = new JLabel(String.format("<html> <h1 style='font-family: MuseoSans-900;font-size:28px;'>%s. Passenger Info</h1> </html>", this.i+1));
         // lbl_title.setHorizontalAlignment(SwingConstants.CENTER);
         
         p_title.add(lbl_title, BorderLayout.CENTER);
 
 
-        JPanel p_contents = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contents = new JPanel(new BorderLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         p_contents.setPreferredSize(new Dimension(800, 160));
         // p_contents.setLayout(new BoxLayout(p_contents, BoxLayout.Y_AXIS));
 
-        JPanel p_contentTop = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contentTop = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
         JRadioButton rad_MR = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mr.</h3></html>"){{setBackground(Color.WHITE);}};
         JRadioButton rad_MRs = new JRadioButton("<html><h3 style='font-family: MuseoSans-900;font-size:16px;'>&nbsp;&nbsp;Mrs.</h3></html>"){{setBackground(Color.WHITE);}};
         ButtonGroup rad_group = new ButtonGroup();
@@ -105,7 +107,7 @@ public class PassengerDetails extends JPanel{
         p_contentTop.add(p_lasName);
 
 
-        JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_contentBottom = new JPanel(new FlowLayout()){{setBackground(Color.WHITE); setBorder(new LineBorder(Color.WHITE, 2));}};
 
         Properties p = new Properties();
         p.put("text.today", "Today");
@@ -120,17 +122,17 @@ public class PassengerDetails extends JPanel{
         p_dobMini.add(datePicker, BorderLayout.WEST);
         p_dob.add(p_dobMini);
 
-        JPanel p_email = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
-        JPanel p_emailMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        JLabel lbl_email = new JLabel("Email:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        JTextField txt_email = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
-        p_emailMini.add(lbl_email, BorderLayout.NORTH);
-        p_emailMini.add(txt_email, BorderLayout.CENTER);
-        p_email.add(p_emailMini); 
+        JPanel p_Phone = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
+        JPanel p_PhoneMini = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
+        JLabel lbl_Phone = new JLabel("Phone Number:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        JTextField txt_Phone = new JTextField(15){{setFont(new Font("MuseoSans-900", Font.BOLD, 16));}};
+        p_PhoneMini.add(lbl_Phone, BorderLayout.NORTH);
+        p_PhoneMini.add(txt_Phone, BorderLayout.CENTER);
+        p_Phone.add(p_PhoneMini); 
 
         JCheckBox chk_turk = new JCheckBox("<html><h3 style='font-family: MuseoSans-900;'>&nbsp;&nbsp;Turkish Citizen</h3></html>"){{setBackground(Color.WHITE);}};
         
-        p_contentBottom.add(p_email);
+        p_contentBottom.add(p_Phone);
         p_contentBottom.add(p_dob);
         p_contentBottom.add(chk_turk);
 
@@ -141,7 +143,7 @@ public class PassengerDetails extends JPanel{
         p_passenger.add(p_contents, BorderLayout.CENTER);
 
         
-        listOfFields.put(i+"", new FormField(txt_name, txt_lasName, txt_email, datePicker, rad_MR, chk_turk));
+        listOfFields.put(i+"", new FormField(txt_name, txt_lasName, txt_Phone, datePicker, rad_MR, chk_turk));
 
         return p_passenger;
         // add(p_passenger);
@@ -153,7 +155,7 @@ public class PassengerDetails extends JPanel{
             FormField lisOfvalues = listOfFields.get(i+"");
             if(lisOfvalues.getFirstName().getText()=="" ||
                lisOfvalues.getFirstName().getText()=="" ||
-               lisOfvalues.getEmail().getText()=="" ||
+               lisOfvalues.getPhone().getText()=="" ||
                lisOfvalues.getDOB().getModel().getValue()==null||
                (lisOfvalues.getButtonGroup().isSelected()==true && lisOfvalues.getButtonGroup().isSelected()==false)){
                 isThereNull= true;
@@ -163,4 +165,6 @@ public class PassengerDetails extends JPanel{
 
         }
     }
+
+
 }

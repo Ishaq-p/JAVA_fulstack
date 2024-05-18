@@ -2,6 +2,8 @@ import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import UserInterface.Alert;
 import UserInterface.SignUpPage;
 
@@ -45,6 +47,11 @@ public class SignUp  extends DB_connection{
     public boolean inputValidity_email(){
         System.out.println(this.email);
         Matcher match = pattern_email.matcher(this.email);
+        return match.matches();
+    }
+    public boolean inputValidity_email(String email){
+        System.out.println(email);
+        Matcher match = pattern_email.matcher(email);
         return match.matches();
     }
     public boolean inputValidity_usrname(){
@@ -94,15 +101,15 @@ public class SignUp  extends DB_connection{
         if (this.inputValidity_email()){
             this.inputValidity_name();
             if (this.check4email()){
-                new Alert("User already exists!!");
+                JOptionPane.showMessageDialog(null,"User already exists", "Already Exists", JOptionPane.ERROR_MESSAGE);
                 return false;
             }else{
                 this.saveUser();
-                new Alert("User Saved!!");
+                JOptionPane.showMessageDialog(null,"User Saved", "Info", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
         }else{
-            new Alert("Not a valid email!");
+            JOptionPane.showMessageDialog(null,"Not a valid email", "Email validity", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

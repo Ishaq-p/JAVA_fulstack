@@ -4,6 +4,8 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,16 +34,16 @@ public class MainPage extends JPanel{
     private UtilDateModel model1 = new UtilDateModel();
 
     private SpinnerNumberModel spinner = new SpinnerNumberModel(1,1,Integer.MAX_VALUE, 1);
-    private JSpinner passengerNum = new JSpinner(spinner);
+    private JSpinner passengerNum = new JSpinner(spinner){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white); setPreferredSize(new Dimension(70, 40));}};
 
     private ButtonGroup radGroup = new ButtonGroup();
-    public JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip");
-    private JRadioButton radBtn_oneWay = new JRadioButton("One Way");
+    public JRadioButton radBtn_roundTrip = new JRadioButton("Round Trip"){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
+    private JRadioButton radBtn_oneWay = new JRadioButton("One Way"){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
 
-    private JComboBox<String> input_from = new JComboBox<>(uniqueFromAirports);
-    private JComboBox<String> input_to = new JComboBox<>(uniqueToAirports);
-    private JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
-    private JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter());
+    private JComboBox<String> input_from = new JComboBox<>(uniqueFromAirports){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
+    private JComboBox<String> input_to = new JComboBox<>(uniqueToAirports){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
+    private JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter()){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
+    private JDatePickerImpl datePicker1 = new JDatePickerImpl(new JDatePanelImpl(this.model1, p), new DateComponentFormatter()){{setFont(new Font("MuseoSans-900", Font.PLAIN, 20));setBackground(Color.white);}};
     
     public String from;
     public String to;
@@ -50,8 +52,10 @@ public class MainPage extends JPanel{
     public int passengerFinalNum;
     public boolean oneWay;
 
+    public long miliSeconds1, miliSeconds2;
 
-    public JButton searchButton = new JButton("Search Flights");
+
+    public JButton searchButton = new JButton("Search Flights"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);}};
 
 
     public MainPage(){
@@ -59,64 +63,64 @@ public class MainPage extends JPanel{
         JPanel p_body = new JPanel(new GridLayout(2,1));  // 21
         // p_body.setPreferredSize(new Dimension(1920,900));
 
-        JPanel p_bigImage = new JPanel();  // 22
+        JPanel p_bigImage = new JPanel(){{setBackground(Color.white);}};  // 22
         ImageIcon bigicon = new ImageIcon("/home/ishaq/Documents/books/6th_semes/visualBasedProg/week10/VB_mainProj/bigImage.png"); // Replace "path/to/your/image.jpg" with the path to your image file
         Image scaledBigImage = bigicon.getImage().getScaledInstance(1920, 549, Image.SCALE_SMOOTH); // Set the desired width and height
         ImageIcon bigicon_scaled = new ImageIcon(scaledBigImage);
         JLabel bigImgLabel = new JLabel(bigicon_scaled);
         p_bigImage.add(bigImgLabel);
 
-        JPanel p_searchArea = new JPanel(new BorderLayout());  // 23
+        JPanel p_searchArea = new JPanel(new BorderLayout()){{setBackground(Color.white);}};  // 23
 
-        JPanel p_searchTop = new JPanel(new BorderLayout());   // 231
-        p_searchTop.setBorder(new EmptyBorder(0, 100, 0, 500)); // top, left, bottom, right
-        JPanel p_searchTopLeft = new JPanel();
+        JPanel p_searchTop = new JPanel(new FlowLayout()){{setBackground(Color.white);}};   // 231
+        JPanel p_searchTopLeft = new JPanel(){{setBorder(new EmptyBorder(0, 5, 0, 700));setBackground(Color.white);}};
         p_searchTopLeft.add(radBtn_roundTrip);
         p_searchTopLeft.add(radBtn_oneWay);
-        // p_searchTopLeft.add(radBtn_multiCity);
         radGroup.add(radBtn_roundTrip);
         radGroup.add(radBtn_oneWay);
-        // radGroup.add(radBtn_multiCity);
-        JPanel p_searchTopRight = new JPanel();
+        JPanel p_searchTopRight = new JPanel(){{setBackground(Color.white);}};
         p_searchTopRight.add(new JLabel("Gift a ticket"));
 
-        p_searchTop.add(p_searchTopRight, BorderLayout.EAST);
-        p_searchTop.add(p_searchTopLeft, BorderLayout.WEST);
+        p_searchTop.add(p_searchTopLeft);
+        p_searchTop.add(p_searchTopRight);
+
         
 
 
-        JPanel p_searchBottom = new JPanel(); // 232
+        JPanel p_searchBottom = new JPanel(){{setBackground(Color.white);}}; // 232
         p_searchBottom.setLayout(new FlowLayout());
 
-        JPanel p_from = new JPanel(new FlowLayout());
-        JPanel p_fromMini = new JPanel(new BorderLayout());
-        p_fromMini.add(new JLabel("From:"), BorderLayout.NORTH);
+        JPanel p_from = new JPanel(new FlowLayout()){{setBackground(Color.white);}};
+        JPanel p_fromMini = new JPanel(new BorderLayout()){{setBackground(Color.white);}};
+        JLabel lbl_from = new JLabel("From:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
+        p_fromMini.add(lbl_from, BorderLayout.NORTH);
         p_fromMini.add(input_from, BorderLayout.SOUTH);
         p_from.add(p_fromMini);
-        JPanel p_to = new JPanel(new FlowLayout());
-        JPanel p_toMini = new JPanel(new BorderLayout());
-        p_toMini.add(new JLabel("To:"), BorderLayout.NORTH);
+        JPanel p_to = new JPanel(new FlowLayout()){{setBackground(Color.white);}};
+        JPanel p_toMini = new JPanel(new BorderLayout()){{setBackground(Color.white);}};
+        JLabel lbl_to = new JLabel("To:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
+        p_toMini.add(lbl_to, BorderLayout.NORTH);
         p_toMini.add(input_to, BorderLayout.SOUTH);
         p_to.add(p_toMini);
 
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
-        JPanel p_fromDate = new JPanel(new FlowLayout());
-        JPanel p_fromDateMini = new JPanel(new BorderLayout());
-        JLabel lblFromDate = new JLabel("Departure:");
+        JPanel p_fromDate = new JPanel(new FlowLayout()){{setBackground(Color.white);}};
+        JPanel p_fromDateMini = new JPanel(new BorderLayout()){{setBackground(Color.white);}};
+        JLabel lblFromDate = new JLabel("Departure Time:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
         p_fromDateMini.add(lblFromDate);
         p_fromDateMini.add(datePicker, BorderLayout.SOUTH);
         p_fromDate.add(p_fromDateMini);
-        JPanel p_toDate = new JPanel(new FlowLayout());
-        JPanel p_toDateMini = new JPanel(new BorderLayout());
-        JLabel lblToDate = new JLabel("Arrival:");
+        JPanel p_toDate = new JPanel(new FlowLayout()){{setBackground(Color.white);}};
+        JPanel p_toDateMini = new JPanel(new BorderLayout()){{setBackground(Color.white);}};
+        JLabel lblToDate = new JLabel("Arrival Time:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
         p_toDateMini.add(lblToDate);
         p_toDateMini.add(datePicker1, BorderLayout.SOUTH);
         p_toDate.add(p_toDateMini);
 
-        JPanel p_passengerNum = new JPanel(new FlowLayout());
-        JLabel lblPassengerNum = new JLabel("Number of Passengers:");
+        JPanel p_passengerNum = new JPanel(new FlowLayout()){{setBackground(Color.white);}};
+        JLabel lblPassengerNum = new JLabel("Number of Passengers:"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20));}};
         p_passengerNum.add(lblPassengerNum, BorderLayout.NORTH);
         p_passengerNum.add(passengerNum, BorderLayout.SOUTH);
 
@@ -182,15 +186,15 @@ public class MainPage extends JPanel{
         int[] dateInt = {this.datePicker.getModel().getYear(), this.datePicker.getModel().getMonth(), this.datePicker.getModel().getDay()};
         Calendar calender = Calendar.getInstance();
         calender.set(dateInt[0], dateInt[1], dateInt[2]);
-        long miliSeconds = calender.getTimeInMillis();
-        this.departDate = new java.sql.Date(miliSeconds);
+        this.miliSeconds1 = calender.getTimeInMillis();
+        this.departDate = new java.sql.Date(this.miliSeconds1);
         System.out.println(this.departDate);
 
         int[] dateInt1 = {this.datePicker1.getModel().getYear(), this.datePicker1.getModel().getMonth(), this.datePicker1.getModel().getDay()};
         Calendar calender1 = Calendar.getInstance();
         calender1.set(dateInt1[0], dateInt1[1], dateInt1[2]);
-        long miliSeconds1 = calender1.getTimeInMillis();
-        this.arrivalDate = new java.sql.Date(miliSeconds1);
+        this.miliSeconds2 = calender1.getTimeInMillis();
+        this.arrivalDate = new java.sql.Date(this.miliSeconds2);
         System.out.println(this.arrivalDate);
         
         this.passengerFinalNum = (int) passengerNum.getValue();

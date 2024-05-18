@@ -81,17 +81,17 @@ public class FLightSelection extends JPanel{
         String lbl_To  = String.format("<html><h2> %s </h2><h3 style='color: gray;font-family: MuseoSans-900;'> %s </h3><h5 style='color: gray;font-family: MuseoSans-900;'> %s </h5></html>", this.arrivalTime, this.to, this.flightType);
 
         JPanel p_entireWindow = new JPanel(new GridLayout()){{setBackground(Color.WHITE);}};
-        p_entireWindow.setBorder(new LineBorder(Color.GREEN, 2));
+        p_entireWindow.setBorder(new LineBorder(SystemColor.window, 2));
 
         JPanel p_eachFlight = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
-        p_eachFlight.setBorder(new LineBorder(Color.RED, 2));
+        // p_eachFlight.setBorder(new LineBorder(SystemColor.window, 2));
 
 
         JPanel p_flightDetials = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
-        p_flightDetials.setBorder(new LineBorder(Color.RED, 2));
+        p_flightDetials.setBorder(new LineBorder(Color.WHITE, 2));
 
         JPanel p_fromTo = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};;
-        p_fromTo.setBorder(new LineBorder(Color.RED, 2));
+        p_fromTo.setBorder(new LineBorder(Color.WHITE, 2));
         JPanel p_from = new JPanel(){{setBackground(Color.WHITE);}};;
         JLabel lbl_from = new JLabel(lbl_From);
         p_from.add(lbl_from);
@@ -113,7 +113,7 @@ public class FLightSelection extends JPanel{
         JPanel p_subFlightDetails = new JPanel(new FlowLayout()){{setPreferredSize(new Dimension(p_fromTo.getWidth(), 30));
                                                                 setBackground(Color.WHITE);
                                                                 setBackground(Color.WHITE);
-                                                                setBorder(new LineBorder(Color.RED, 2));}};
+                                                                setBorder(new LineBorder(Color.WHITE, 2));}};
         JPanel p_duration = new JPanel();
         p_duration.setBackground(Color.WHITE);
         JLabel lbl_duration = new JLabel(String.format("Flight duration: %s", this.duration));
@@ -135,11 +135,11 @@ public class FLightSelection extends JPanel{
 
 
 
-        JPanel p_flightType = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_flightType = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);setBorder(new LineBorder(Color.WHITE, 2));}};
         // p_flightType.setBorder(new LineBorder(Color.RED, 2));
         
         JPanel p_economy = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);
-                                                            setBorder(new LineBorder(Color.RED, 2));}};
+                                                            setBorder(new LineBorder(new Color(0xDFE4ED), 2));}};
         p_economy.setBackground(Color.WHITE);
         
         JPanel p_lblEco = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);
@@ -159,7 +159,7 @@ public class FLightSelection extends JPanel{
         p_economy.add(p_selectionEco, BorderLayout.CENTER);
 
 
-        JPanel p_buisness = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);setBorder(new LineBorder(Color.RED, 2));}};
+        JPanel p_buisness = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);setBorder(new LineBorder(new Color(0xF7EAE4), 2));}};
         JPanel p_lblBuis = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);
                                                             // setBorder(new LineBorder(Color.RED, 2));
                                                             setPreferredSize(new Dimension(p_buisness.getWidth(), 31));

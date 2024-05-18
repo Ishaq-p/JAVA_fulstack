@@ -32,15 +32,15 @@ public class Window extends JFrame{
 
     private JPanel p_bottomButtons = new JPanel(new FlowLayout());
 
-    private JButton btn_flightFinal1 = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_flightFinal2 = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_passengerFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_final = new JButton("Checkout");
+    private JButton btn_flightFinal1 = new JButton("Next"){{setPreferredSize(new Dimension(300, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);}};
+    private JButton btn_flightFinal2 = new JButton("Next"){{setPreferredSize(new Dimension(300, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);}};
+    private JButton btn_passengerFinal = new JButton("Next"){{setPreferredSize(new Dimension(300, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);}};
+    private JButton btn_final = new JButton("Checkout"){{setPreferredSize(new Dimension(300, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);}};
 
-    private JButton btn_flightFinal1_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_flightFinal2_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_passengerFinal_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
-    private JButton btn_payment_back = new JButton("Back"){{setPreferredSize(new Dimension(300, 80));}};
+    private JButton btn_flightFinal1_back = new JButton("Back"){{setPreferredSize(new Dimension(200, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(Color.white); setForeground(new Color(199, 10, 15));}};
+    private JButton btn_flightFinal2_back = new JButton("Back"){{setPreferredSize(new Dimension(200, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(Color.white); setForeground(new Color(199, 10, 15));}};
+    private JButton btn_passengerFinal_back = new JButton("Back"){{setPreferredSize(new Dimension(200, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(Color.white); setForeground(new Color(199, 10, 15));}};
+    private JButton btn_payment_back = new JButton("Back"){{setPreferredSize(new Dimension(200, 70));setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(Color.white); setForeground(new Color(199, 10, 15));}};
 
     private String[] barButtonsNames = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", "SignUp", "LogIn"};
     private int barRed=33, barGreen=37, barBlue=42;
@@ -72,9 +72,7 @@ public class Window extends JFrame{
 
         JPanel p_navBar = navBar(barButtonsNames);
         
-        
 
-                
 
 
         // action listener for the search button on the main page
@@ -85,27 +83,34 @@ public class Window extends JFrame{
                 String[] flightIds;
                 
                 if (bool){
-                    removePages();
                     mainPage.storeMainPageValues();
+                    if(!mainPage.oneWay && (mainPage.miliSeconds1>mainPage.miliSeconds2)){
+                        JOptionPane.showMessageDialog(null, "depart date cannot be greater than arrival ", "Miss Input", JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        if(mainPage.from!=mainPage.to){
+                            removePages();
+                            System.out.println("if:");
+                            flightChecker = new FlightChecker(mainPage.from, mainPage.to, mainPage.departDate, mainPage.arrivalDate, mainPage.passengerFinalNum);
+                            flightIds = flightChecker.searchFlights_oneway();
+                            for (String i : flightIds){
+                                String[] flightInfo = flightChecker.flightDetails(i);
+                                flightDetails_oneway.add(flightInfo);
+                            }
+                            numPassengers = mainPage.passengerFinalNum;
+                            assingFlightSelection(true);
 
-                    System.out.println("if:");
-                    flightChecker = new FlightChecker(mainPage.from, mainPage.to, mainPage.departDate, mainPage.arrivalDate, mainPage.passengerFinalNum);
-                    flightIds = flightChecker.searchFlights_oneway();
-                    for (String i : flightIds){
-                        String[] flightInfo = flightChecker.flightDetails(i);
-                        flightDetails_oneway.add(flightInfo);
+                            add(flightSelection1, BorderLayout.CENTER);
+                            bottomButtons(btn_flightFinal1_back, btn_flightFinal1);
+                            add(p_bottomButtons, BorderLayout.SOUTH);
+                            revalidate();
+                            repaint();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "From and To can't be the same place", "Miss Input", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-                    numPassengers = mainPage.passengerFinalNum;
-                    assingFlightSelection(true);
-
-                    add(flightSelection1, BorderLayout.CENTER);
-                    bottomButtons(btn_flightFinal1_back, btn_flightFinal1);
-                    add(p_bottomButtons, BorderLayout.SOUTH);
-                    revalidate();
-                    repaint();
                     // mainPage.emptyMainPageFields();
                 }else{
-                    new Alert("please fill all the feilds!!");
+                    JOptionPane.showMessageDialog(null,"fill out all the fields", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -150,10 +155,9 @@ public class Window extends JFrame{
                         repaint();        
                     }
                 }else{
-                    new Alert("please select a flight!!");
+                    JOptionPane.showMessageDialog(null, "Select a flight", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
+
                 }   
-                // System.out.println(flightSelection.flightSelected+" "+ isEco1);
-                // new Alert("please select somthin");
             }
         });
 
@@ -172,7 +176,8 @@ public class Window extends JFrame{
                     revalidate();
                     repaint();    
                 }else{
-                    new Alert("please select a flight!!");
+                    JOptionPane.showMessageDialog(null, "please select a fligh", "Miss Input", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
@@ -190,7 +195,7 @@ public class Window extends JFrame{
                     revalidate();
                     repaint();
                 }else{
-                    new Alert("please fill all the feilds!!");
+                    JOptionPane.showMessageDialog(null,"fill out all the fields", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -206,30 +211,37 @@ public class Window extends JFrame{
                 System.out.println("isThereNull: "+payment.isThereNull);
                 if(!payment.isThereNull){
                     payment.storeValues();
-                    boolean submissionState = (isLoggedIn) ? true : saveNonLoggedUser();
-                    if(submissionState){
-                        boolean cardInfo_savingStatus = saveCardInfo();
-                        if (cardInfo_savingStatus){
-                            saveTicketHolders();
-                            removePages();
-                            mainPage.emptyMainPageFields();
-                            add(mainPage, BorderLayout.CENTER);
-                            revalidate();
-                            repaint();
-                            if(mainPage.oneWay){
-                                new Alert("ticket No:"+flightID1+" is purchased.");
+                        if(payment.miliSeconds1<1136073600000L){
+                        boolean submissionState = (isLoggedIn) ? true : saveNonLoggedUser();
+                        if(submissionState){
+                            boolean cardInfo_savingStatus = saveCardInfo();
+                            if (cardInfo_savingStatus){
+                                saveTicketHolders();
+                                removePages();
+                                mainPage.emptyMainPageFields();
+                                add(mainPage, BorderLayout.CENTER);
+                                revalidate();
+                                repaint();
+                                if(mainPage.oneWay){
+                                    JOptionPane.showMessageDialog(null,"ticket No:\"+flightID1+\" is purchased.", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"ticket No:"+flightID1+ "and No:"+flightID2+" are purchased.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }else{
-                                new Alert("ticket No:"+flightID1+ "and No:"+flightID2+" are purchased.");
+                                JOptionPane.showMessageDialog(null,"Somthing went wrong with card saving", "saving error", JOptionPane.ERROR_MESSAGE);
                             }
                         }else{
-                            new Alert("somth went wrong with card saving");
+                            JOptionPane.showMessageDialog(null,"Somthing went wrong with saving user", "saving error", JOptionPane.ERROR_MESSAGE);
                         }
                     }else{
-                        new Alert("somthing went wrong with signup");
+                        JOptionPane.showMessageDialog(null,"Ticket Purchaser has to be 18+", "underAge", JOptionPane.ERROR_MESSAGE);
+
                     }
                 }
                 else{
-                    new Alert("please fill all the feilds!!");
+                    JOptionPane.showMessageDialog(null,"please fill all the feilds!!", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
@@ -265,7 +277,8 @@ public class Window extends JFrame{
                         repaint();
                     }
                 }else{
-                    new Alert("please fill all the feilds!!");
+                    JOptionPane.showMessageDialog(null,"fill out all the fields", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
@@ -277,7 +290,8 @@ public class Window extends JFrame{
                     loginPage.storeValues();
                     Login login = new Login(loginPage.user_name, loginPage.passcode);
                     if (login.logingIn()){
-                        new Alert("Logged in!!");
+                        JOptionPane.showMessageDialog(null,"Logged in", "Info", JOptionPane.INFORMATION_MESSAGE);
+
                         isLoggedIn=true;
                         loggedUsername = loginPage.user_name;
                         remove(p_navBar);
@@ -288,11 +302,11 @@ public class Window extends JFrame{
                         loginPage.setFieldsNull();
                         loginPage.dispose();
                     }else{
-                        new Alert("username and password doesnt match!!");
+                        JOptionPane.showMessageDialog(null,"username and password doesnt match", "Doens't Exist", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }else{
-                    new Alert("please fill all the fields!!");
+                    JOptionPane.showMessageDialog(null,"fill out all the fields", "Empty Feilds", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -392,7 +406,11 @@ public class Window extends JFrame{
 
 
     private void changeBarButtons(){
-        String[] newBarButtons = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", this.loggedUsername};
+        String[] newBarButtons = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", this.loggedUsername, "LogOut"};
+        this.barButtonsNames = newBarButtons;
+    }
+    private void reChangeBarButtons(){
+        String[] newBarButtons = {"Book&Plane", "Experience", "Deal&destination", "Miles&Smiles", "Help", "SignUp", "LogIn"};
         this.barButtonsNames = newBarButtons;
     }
 
@@ -413,37 +431,44 @@ public class Window extends JFrame{
                                                     setBorder(new EmptyBorder(0,0,0,0));}};
         p_logo.add(logolabel);
 
-        JPanel p_barButtons = new JPanel(new GridLayout(1, barButtonsNames.length));  // 13
-        for (String button : barButtonNames){
+        JPanel p_barButtons = new JPanel(new GridLayout(1, barButtonsNames.length));
+        for (String button : barButtonsNames) {
             JButton barBtn = new JButton(button);
+        
+            if (button.equals(this.loggedUsername)) {
+                ImageIcon logIcon = new ImageIcon("/home/ishaq/Documents/books/6th_semes/visualBasedProg/week10/VB_mainProj/PP.jpg"); // Replace with the path to your image file
+                Image scaledIcon = logIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH); // Set the desired width and height
+                ImageIcon iconScaled = new ImageIcon(scaledIcon);
+                barBtn.setIcon(iconScaled);
+            }
+        
             barBtn.setBackground(navbarColor);
             barBtn.setForeground(Color.WHITE);
             barBtn.setBorder(null);
-            Font customFont = new Font("MuseoSans-900", Font.BOLD, 16); // Set bold font with size 14
+            Font customFont = new Font("MuseoSans-900", Font.BOLD, 16); // Set bold font with size 16
             barBtn.setFont(customFont);
-            if (button=="LogIn"){
-                barBtn.addActionListener(new ActionListener() {  
+        
+            if (button.equals("LogIn")) {
+                barBtn.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e){
+                    public void actionPerformed(ActionEvent e) {
                         loginPage.loginPage();
                     }
                 });
-            }else if (button=="SignUp"){
+            } else if (button.equals("SignUp")) {
                 barBtn.addActionListener(new ActionListener() {
-                    
                     @Override
-                    public void actionPerformed(ActionEvent e){
+                    public void actionPerformed(ActionEvent e) {
                         removePages();
                         add(signUpPage, BorderLayout.CENTER);
                         revalidate();
                         repaint();
                     }
                 });
-            }else if (button=="Book&Plane"){
+            } else if (button.equals("Book&Plane")) {
                 barBtn.addActionListener(new ActionListener() {
-                    
                     @Override
-                    public void actionPerformed(ActionEvent e){
+                    public void actionPerformed(ActionEvent e) {
                         removePages();
                         mainPage.emptyMainPageFields();
                         add(mainPage, BorderLayout.CENTER);
@@ -451,10 +476,27 @@ public class Window extends JFrame{
                         repaint();
                     }
                 });
+            }else if(button.equals("LogOut")){
+                barBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        isLoggedIn = false;
+                        loggedUsername = "";
+                        removePages();
+                        remove(p_navBar);
+                        reChangeBarButtons();
+                        add(navBar(barButtonsNames), BorderLayout.NORTH);
+                        mainPage.emptyMainPageFields();
+                        add(mainPage, BorderLayout.CENTER);
+                        revalidate();
+                        repaint();
+                    }
+                });
             }
+        
             p_barButtons.add(barBtn);
         }
-    
+            
 
         // the turkish airlines logo button action listener
         logolabel.addActionListener(new ActionListener() {
@@ -524,10 +566,10 @@ public class Window extends JFrame{
             connection.save_passenger_info(form.getFirstName().getText()+" "+form.getLastName().getText(),
                                             dob,
                                             title,
-                                            form.getEmail().getText(),
+                                            form.getPhone().getText(),
                                             turk);
 
-            int tktHolderID = connection.getID_ticketHolder(form.getEmail().getText());
+            int tktHolderID = connection.getID_ticketHolder(form.getPhone().getText());
             if(mainPage.oneWay){
                 int classE = (this.isEco1) ? 1 : 0;
                 connection.save2FlihgtCustm(tktHolderID, this.loggedID, this.flightID1, classE);
@@ -542,7 +584,7 @@ public class Window extends JFrame{
         connection.flightsUpdate(this.flightID1, classE, this.numPassengers);
         connection.disconnect();
     }
-    
+     
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             new Window();

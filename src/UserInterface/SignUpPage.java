@@ -34,13 +34,13 @@ public class SignUpPage extends JPanel{
     private JTextField txt_lastname = new JTextField(15);
     private JTextField txt_email = new JTextField(15);
     private JTextField txt_country = new JTextField(15);
-    private JDatePickerImpl txt_dob = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter());
+    private JDatePickerImpl txt_dob = new JDatePickerImpl(new JDatePanelImpl(this.model, p), new DateComponentFormatter()){{setBorder(new EmptyBorder(0,0,0,10)); setBackground(Color.white);}};
     private String[] titles = {"Mr.","Mrs."};
     private JComboBox<String> txt_title = new JComboBox<>(titles){{setBackground(Color.WHITE);}};
     private JTextField txt_username = new JTextField(15);
     private JPasswordField txt_passwprd = new JPasswordField(15);
 
-    public JButton submitButton = new JButton("Create Account");
+    public JButton submitButton = new JButton("Create Account"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);setPreferredSize(new Dimension(300,60));}};
 
 
 
@@ -49,11 +49,11 @@ public class SignUpPage extends JPanel{
         JPanel mainPanel = new JPanel(){{setBackground(Color.WHITE);}};
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setPreferredSize(new Dimension(995, 900));
-        mainPanel.setBorder(new LineBorder(Color.RED, 2));
+        mainPanel.setBorder(new LineBorder(Color.WHITE, 2));
 
         JPanel p_header = new JPanel(new FlowLayout(FlowLayout.CENTER)){{setBackground(Color.WHITE);}};
-        JLabel header = new JLabel("Membership with us");
-        header.setFont(new Font("MuseoSans-900", Font.BOLD, 40));
+        JLabel header = new JLabel("Miles&Smiles Membership");
+        header.setFont(new Font("MuseoSans-900", Font.BOLD, 55));
         header.setHorizontalAlignment(JLabel.CENTER);
         p_header.add(header);
 
@@ -62,11 +62,11 @@ public class SignUpPage extends JPanel{
         JPanel p_personalInfo1Parent = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_personalInfo1headerAndBody = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         p_personalInfo1headerAndBody.setPreferredSize(new Dimension(900,250));
-        p_personalInfo1headerAndBody.setBorder(new LineBorder(Color.GREEN, 2));
+        p_personalInfo1headerAndBody.setBorder(new LineBorder(Color.WHITE, 2));
         JPanel p_personalInfo1 = new JPanel(new GridLayout(3,2)){{setBackground(Color.WHITE);}};
-        p_personalInfo1.setBorder(new LineBorder(Color.GREEN, 2));
+        p_personalInfo1.setBorder(new LineBorder(Color.WHITE, 2));
 
-        JLabel lbl_perosnalInfo = new JLabel("Perosnal Info:");
+        JLabel lbl_perosnalInfo = new JLabel("Perosnal Info"){{setHorizontalAlignment(SwingConstants.CENTER);}};
         lbl_perosnalInfo.setFont(new Font("MuseoSans-900", Font.BOLD, 32));
 
         JPanel p_firstname = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
@@ -145,11 +145,11 @@ public class SignUpPage extends JPanel{
         JPanel p_personalInfo2Parent = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
         JPanel p_personalInfo2headerAndBody = new JPanel(new BorderLayout()){{setBackground(Color.WHITE);}};
         p_personalInfo2headerAndBody.setPreferredSize(new Dimension(900,100));
-        p_personalInfo2headerAndBody.setBorder(new LineBorder(Color.GREEN, 2));
+        p_personalInfo2headerAndBody.setBorder(new LineBorder(Color.WHITE, 2));
         JPanel p_personalInfo2 = new JPanel(new GridLayout(1,2)){{setBackground(Color.WHITE);}};
-        p_personalInfo1.setBorder(new LineBorder(Color.GREEN, 2));
+        p_personalInfo1.setBorder(new LineBorder(Color.WHITE, 2));
 
-        JLabel lbl_perosnalInfo2 = new JLabel("Security Info:");
+        JLabel lbl_perosnalInfo2 = new JLabel("Security Info"){{setHorizontalAlignment(SwingConstants.CENTER);}};
         lbl_perosnalInfo2.setFont(new Font("MuseoSans-900", Font.BOLD, 32));
 
         JPanel p_username = new JPanel(new FlowLayout()){{setBackground(Color.WHITE);}};
@@ -191,7 +191,8 @@ public class SignUpPage extends JPanel{
         mainPanel.add(p_personalInfo2Parent);
         mainPanel.add(p_submitButton);
 
-        add(mainPanel);
+        add(p_header, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
 
     }
 

@@ -37,10 +37,10 @@ public class FormField {
         this.textField2 = textField2;
     }
 
-    public JTextField getEmail() {
+    public JTextField getPhone() {
         return textField3;
     }
-    public void setEmail(JTextField textField2) {
+    public void setPhone(JTextField textField2) {
         this.textField3 = textField3;
     }
 

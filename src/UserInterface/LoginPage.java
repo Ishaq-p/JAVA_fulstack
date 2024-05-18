@@ -9,14 +9,16 @@ public class LoginPage extends JFrame{
 
     private JPasswordField password = new JPasswordField();
     private JTextField username = new JTextField();
-    public JButton submit = new JButton("Submit");
+    public JButton submit = new JButton("Submit"){{setFont(new Font("MuseoSans-900", Font.BOLD, 20)); setBackground(new Color(199, 10, 15)); setForeground(Color.white);setPreferredSize(new Dimension(300,60));}};
+    private JFrame frame = new JFrame();
 
     // void constructor
     public LoginPage(){}
 
     // the popup login page
     public void loginPage(){
-        JPanel p_login = new JPanel(new GridBagLayout());
+        
+        JPanel p_login = new JPanel(new GridBagLayout()){{setBackground(Color.WHITE);}};
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0;
@@ -24,7 +26,7 @@ public class LoginPage extends JFrame{
         gbc.insets = new Insets(10,10,10,10);
         
         // label for the header
-        JPanel p_header = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel p_header = new JPanel(new FlowLayout(FlowLayout.CENTER)){{setBackground(Color.WHITE);}};
         JLabel header = new JLabel("LogIn");
         header.setFont(new Font("MuseoSans-900", Font.BOLD, 40));
         header.setHorizontalAlignment(JLabel.CENTER);
@@ -32,7 +34,7 @@ public class LoginPage extends JFrame{
 
         p_login.add(p_header, gbc);
 
-        JPanel miniPanel = new JPanel(new GridBagLayout());
+        JPanel miniPanel = new JPanel(new GridBagLayout()){{setBackground(Color.WHITE);}};
         gbc.gridy++;
         JLabel lbl_username = new JLabel("username:");
         lbl_username.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
@@ -44,7 +46,7 @@ public class LoginPage extends JFrame{
         miniPanel.add(username, gbc);
 
         gbc.gridy++;
-        JLabel lbl_password = new JLabel("password:");
+        JLabel lbl_password = new JLabel("password:"){{setBackground(Color.WHITE);}};
         lbl_password.setFont(new Font("MuseoSans-900", Font.BOLD, 20));
         miniPanel.add(lbl_password, gbc);
 
@@ -60,13 +62,13 @@ public class LoginPage extends JFrame{
 
         // Add the header label to the login panel
         p_login.add(miniPanel, gbc);
-
+        
         add(p_login);
         pack();
         setTitle("Login main page");
         setSize(400, 500); // Setting a default size for demonstration
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 
@@ -86,6 +88,10 @@ public class LoginPage extends JFrame{
     public void setFieldsNull(){
         this.username.setText("");
         this.password.setText("");
+    }
+
+    public void disposeFrame(){
+        this.frame.dispose();
     }
 
     // public static void main(String[] args){
