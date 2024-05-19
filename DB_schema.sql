@@ -1,0 +1,226 @@
+CREATE TABLE IF NOT EXISTS CustomerInfo(
+	id int AUTO_INCREMENT PRIMARY KEY,
+  	fulname VARCHAR(225) NOT NULL,
+  	Nationality VARCHAR(225),
+	DOB DATETIME,
+	gender VARCHAR(7),
+  	username VARCHAR(225),
+  	password VARCHAR(225),
+  	email VARCHAR(225) NOT NULL,
+	isTurk TINYINT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Planes(
+	planeID VARCHAR(225) primary key,
+  	planModel VARCHAR(225) not null,
+  	capacity INT not null,
+  	Eco_seats INT not null
+);
+
+CREATE TABLE IF NOT EXISTS Flights(
+	flightID VARCHAR(225) primary key,
+  	from_ VARCHAR(225) not null,
+  	to_ VARCHAR(225) not null,
+  	planeID VARCHAR(225) not null,
+  	departureTime DATETIME NOT NULL,
+  	flightDuration INT NOT NULL,
+  	E_seatsLeft INT UNSIGNED NOT NULL,
+  	B_seatsLeft INT UNSIGNED NOT NULL,
+  	destinationType VARCHAR(225),
+	ecoPrice INT NOT NULL,
+	buisPrice INT NOT NULL,
+  
+  	FOREIGN KEY (planeID) REFERENCES Planes(planeID)
+);
+
+CREATE TABLE IF  NOT EXISTS TicketHolders(
+	id int AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(225),
+	fulName VARCHAR(225),
+	dob DATE,
+	email VARCHAR(225),
+	isTurk TINYINT
+) 
+
+
+CREATE TABLE IF NOT EXISTS FlightCustomers(
+  	id int AUTO_INCREMENT primary key,
+	ticket_holder int,
+	customerID int,
+  	flightID VARCHAR(225) not null,
+  	class_E TINYINT NOT NULL, 
+  
+    FOREIGN KEY (customerID) REFERENCES CustomerInfo(id),
+    FOREIGN KEY (flightID) REFERENCES Flights(flightID),
+	FOREIGN KEY (ticket_holder) REFERENCES TicketHolders(id)
+);
+
+CREATE TABLE IF NOT EXISTS CardInfo(
+	id int AUTO_INCREMENT PRIMARY KEY,
+	customerID int,
+	fulName VARCHAR(225),
+	phone VARCHAR(225),
+	cardNumber VARCHAR(225),
+	expDate VARCHAR(225),
+	CVV VARCHAR(225),
+	FOREIGN KEY (customerID) REFERENCES CustomerInfo(id)
+);
+
+
+-- SHOW VARIABLES LIKE "local_infile";
+-- SET GLOBAL local_infile = 1;
+LOAD DATA LOCAL INFILE './CustomerInfo.csv' INTO TABLE CustomerInfo FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+
+
+
+INSERT INTO `Planes` (`planeID`, `planModel`, `capacity`, `Eco_seats`) VALUES
+('ABC123', 'Boeing 737', 150, 120),
+('DEF456', 'Airbus A320', 180, 150),
+('GHI789', 'Boeing 787', 250, 200),
+('JKL012', 'Airbus A350', 300, 240),
+('MNO345', 'Embraer E190', 100, 80),
+('PQR678', 'Bombardier CRJ900', 80, 60),
+('STU901', 'Boeing 777', 350, 280),
+('VWX234', 'Airbus A380', 500, 400);
+
+
+INSERT INTO `Flights` (`flightID`, `from_`, `to_`, `planeID`, `departureTime`, `flightDuration`, `E_seatsLeft`, `B_seatsLeft`, `destinationType`, `ecoPrice`, `buisPrice`) VALUES
+('FLIGHT001', 'IST', 'JFK', 'ABC123', '2024-05-03 08:00:00', 720, 119, 30, 'International' , 3000, 6000),
+('FLIGHT002', 'JFK', 'IST', 'ABC123', '2024-05-03 10:00:00', 720, 119, 27, 'International' , 3000, 6000),
+('FLIGHT003', 'IST', 'LHR', 'DEF456', '2024-05-03 12:00:00', 180, 150, 27, 'International' , 3000, 6000),
+('FLIGHT004', 'LHR', 'IST', 'DEF456', '2024-05-03 14:00:00', 180, 149, 28, 'International' , 3000, 6000),
+('FLIGHT005', 'IST', 'CDG', 'GHI789', '2024-05-03 16:00:00', 240, 199, 49, 'International' , 3000, 6000),
+('FLIGHT006', 'CDG', 'IST', 'GHI789', '2024-05-03 18:00:00', 240, 198, 48, 'International' , 3000, 6000),
+('FLIGHT007', 'IST', 'FRA', 'JKL012', '2024-05-03 20:00:00', 240, 239, 54, 'International' , 3000, 6000),
+('FLIGHT008', 'FRA', 'IST', 'JKL012', '2024-05-03 22:00:00', 240, 240, 58, 'International' , 3000, 6000),
+('FLIGHT009', 'IST', 'MUC', 'MNO345', '2024-05-04 08:00:00', 120, 79, 19, 'International'  , 3000, 6000),
+('FLIGHT010', 'MUC', 'IST', 'MNO345', '2024-05-04 10:00:00', 120, 80, 20, 'International'  , 3000, 6000),
+('FLIGHT011', 'IST', 'BCN', 'PQR678', '2024-05-04 12:00:00', 180, 59, 19, 'International'  , 3000, 6000),
+('FLIGHT012', 'BCN', 'IST', 'PQR678', '2024-05-04 14:00:00', 180, 60, 20, 'International'  , 3000, 6000), 
+('FLIGHT013', 'IST', 'LAX', 'STU901', '2024-05-04 16:00:00', 840, 280, 68, 'International' , 3000, 6000),
+('FLIGHT014', 'LAX', 'IST', 'STU901', '2024-05-04 18:00:00', 840, 280, 69, 'International' , 3000, 6000),
+('FLIGHT015', 'IST', 'SYD', 'VWX234', '2024-05-04 20:00:00', 1020, 400, 97, 'International', 3000, 6000),
+('FLIGHT016', 'SYD', 'IST', 'VWX234', '2024-05-04 22:00:00', 1020, 398, 99, 'International', 3000, 6000),
+('TK001', 'IST', 'ANK', 'ABC123', '2024-05-03 08:00:00', 60, 118, 28, 'Domestic' , 3000, 6000),
+('TK002', 'ANK', 'IST', 'ABC123', '2024-05-03 10:00:00', 60, 120, 29, 'Domestic' , 3000, 6000),
+('TK003', 'IST', 'ADA', 'DEF456', '2024-05-03 12:00:00', 90, 149, 27, 'Domestic' , 3000, 6000),
+('TK004', 'ADA', 'IST', 'DEF456', '2024-05-03 14:00:00', 90, 149, 30, 'Domestic' , 3000, 6000),
+('TK005', 'IST', 'ESB', 'GHI789', '2024-05-03 16:00:00', 120, 197, 48, 'Domestic', 3000, 6000),
+('TK006', 'ESB', 'IST', 'GHI789', '2024-05-03 18:00:00', 120, 200, 48, 'Domestic', 3000, 6000),
+('TK007', 'IST', 'DLM', 'JKL012', '2024-05-03 20:00:00', 90, 238, 59, 'Domestic', 3000, 6000),
+('TK008', 'DLM', 'IST', 'JKL012', '2024-05-03 22:00:00', 90, 240, 58, 'Domestic', 3000, 6000),
+('TK009', 'IST', 'AYT', 'MNO345', '2024-05-04 08:00:00', 60, 78, 17, 'Domestic' , 3000, 6000),
+('TK010', 'AYT', 'IST', 'MNO345', '2024-05-04 10:00:00', 60, 78, 15, 'Domestic' , 3000, 6000),
+('TK011', 'IST', 'VAS', 'PQR678', '2024-05-04 12:00:00', 120, 58, 16, 'Domestic', 3000, 6000),
+('TK012', 'VAS', 'IST', 'PQR678', '2024-05-04 14:00:00', 120, 59, 18, 'Domestic', 3000, 6000),
+('TK013', 'IST', 'ADA', 'STU901', '2024-05-04 16:00:00', 90, 280, 67, 'Domestic', 3000, 6000),
+('TK014', 'ADA', 'IST', 'STU901', '2024-05-04 18:00:00', 90, 280, 68, 'Domestic', 3000, 6000),
+('TK015', 'IST', 'TZX', 'VWX234', '2024-05-04 20:00:00', 150, 399, 100, 'Domestic', 3000, 6000),
+('TK016', 'TZX', 'IST', 'VWX234', '2024-05-04 22:00:00', 150, 400, 99, 'Domestic' , 3000, 6000),
+('TK017', 'IST', 'SZF', 'ABC123', '2024-05-05 08:00:00', 90, 120, 27, 'Domestic'  , 3000, 6000),
+('TK018', 'SZF', 'IST', 'ABC123', '2024-05-05 10:00:00', 90, 119, 28, 'Domestic'  , 3000, 6000),
+('TK019', 'IST', 'EZS', 'DEF456', '2024-05-05 12:00:00', 120, 149, 29, 'Domestic' , 3000, 6000),
+('TK020', 'EZS', 'IST', 'DEF456', '2024-05-05 14:00:00', 120, 150, 27, 'Domestic' , 3000, 6000);
+
+
+INSERT INTO `FlightCustomers` (`customerID`, `flightID`, `class_E`, `num_seats`) VALUES
+('SH-109501', 'TK011', 1, 1),
+('CC-209301', 'FLIGHT008', 0, 1),
+('KV-139901', 'TK010', 1, 1),
+('DC-269301', 'FLIGHT006', 0, 1),
+('MR-289501', 'FLIGHT016', 1, 1),
+('MT-060201', 'FLIGHT003', 0, 1),
+('CC-099901', 'TK009', 0, 1),
+('AM-160201', 'TK001', 0, 1),
+('KM-299501', 'TK001', 1, 1),
+('MJ-209901', 'FLIGHT007', 0, 1),
+('GR-229401', 'FLIGHT002', 0, 1),
+('MKM-079601', 'TK014', 0, 1),
+('MH-300101', 'TK007', 0, 1),
+('EWM-019901', 'FLIGHT005', 1, 1),
+('HK-050001', 'TK016', 0, 1),
+('DC-020201', 'TK008', 0, 1),
+('TH-239701', 'TK020', 0, 1),
+('SB-219101', 'FLIGHT004', 0, 1),
+('DT-219701', 'TK014', 0, 1),
+('ER-049801', 'TK005', 1, 1),
+('MH-289301', 'FLIGHT016', 1, 1),
+('AM-179501', 'FLIGHT003', 0, 1),
+('JC-139401', 'FLIGHT015', 0, 1),
+('JB-040401', 'TK004', 1, 1),
+('MZ-079101', 'TK013', 0, 1),
+('AB-120001', 'TK010', 1, 1),
+('LS-049401', 'FLIGHT015', 0, 1),
+('LV-039701', 'TK018', 0, 1),
+('BM-039901', 'TK010', 0, 1),
+('CA-029601', 'TK017', 0, 1),
+('SB-259201', 'TK001', 1, 1),
+('VW-309501', 'FLIGHT002', 0, 1),
+('LF-269701', 'TK013', 0, 1),
+('MW-279101', 'TK018', 1, 1),
+('SW-049601', 'TK010', 0, 1),
+('HG-309501', 'TK001', 0, 1),
+('CK-059201', 'FLIGHT015', 0, 1),
+('BT-029501', 'TK015', 1, 1),
+('MS-110301', 'TK005', 1, 1),
+('EJ-180401', 'FLIGHT007', 0, 1),
+('CS-279801', 'TK003', 0, 1),
+('MC-010101', 'FLIGHT014', 0, 1),
+('AK-169401', 'TK005', 1, 1),
+('FJ-049801', 'TK006', 0, 1),
+('CN-019801', 'TK005', 0, 1),
+('MK-229901', 'TK009', 0, 1),
+('JS-289901', 'TK003', 1, 1),
+('EG-059601', 'TK005', 0, 1),
+('BC-250301', 'FLIGHT016', 0, 1),
+('CR-099901', 'FLIGHT011', 0, 1),
+('SP-179701', 'FLIGHT008', 0, 1),
+('SS-199201', 'FLIGHT011', 1, 1),
+('LP-259801', 'FLIGHT003', 0, 1),
+('SN-209601', 'TK018', 0, 1),
+('ER-090301', 'TK006', 0, 1),
+('JG-039301', 'TK008', 0, 1),
+('KR-140301', 'TK011', 0, 1),
+('AS-239802', 'TK003', 0, 1),
+('AS-050201', 'TK020', 0, 1),
+('SM-110401', 'FLIGHT007', 0, 1),
+('SP-119501', 'TK019', 0, 1),
+('BB-300001', 'TK020', 0, 1),
+('AJM-219501', 'FLIGHT006', 1, 1),
+('LW-189701', 'TK011', 0, 1),
+('TT-069401', 'TK010', 0, 1),
+('CH-170001', 'FLIGHT001', 1, 1),
+('MB-299801', 'FLIGHT013', 0, 1),
+('MS-110001', 'TK003', 0, 1),
+('TM-059901', 'TK010', 0, 1),
+('PB-319901', 'TK012', 1, 1),
+('JR-099201', 'FLIGHT007', 0, 1),
+('SF-110401', 'FLIGHT004', 0, 1),
+('VY-039301', 'TK017', 0, 1),
+('TG-140401', 'FLIGHT002', 1, 1),
+('KW-280201', 'TK011', 0, 1),
+('BM-050001', 'FLIGHT007', 0, 1),
+('ED-130001', 'TK009', 1, 1),
+('KS-069501', 'TK009', 0, 1),
+('PW-039901', 'FLIGHT013', 0, 1),
+('RD-259801', 'TK012', 0, 1),
+('AB-049101', 'FLIGHT009', 0, 1),
+('KH-259601', 'FLIGHT006', 1, 1),
+('KW-280202', 'FLIGHT007', 0, 1),
+('BS-010401', 'FLIGHT004', 1, 1),
+('TC-310101', 'TK011', 1, 1),
+('JR-139401', 'TK011', 0, 1),
+('JR-029401', 'TK013', 0, 1),
+('JA-230201', 'FLIGHT005', 0, 1),
+('RR-090101', 'TK017', 0, 1),
+('AO-039201', 'TK002', 0, 1),
+('AB-140101', 'FLIGHT007', 1, 1),
+('MG-059501', 'TK007', 1, 1),
+('KW-030101', 'TK019', 1, 1),
+('RS-119701', 'FLIGHT009', 1, 1),
+('HS-169601', 'FLIGHT002', 0, 1),
+('ME-059601', 'FLIGHT006', 0, 1),
+('BW-249901', 'TK007', 1, 1),
+('KS-029501', 'TK009', 1, 1),
+('AD-049301', 'TK010', 0, 1),
+('CM-010001', 'TK012', 0, 1);
