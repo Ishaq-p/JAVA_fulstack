@@ -1,6 +1,7 @@
 import UserInterface.Alert;
 import UserInterface.FLightSelection;
 import UserInterface.FormField;
+import UserInterface.Help;
 import UserInterface.LoginPage;
 import UserInterface.MainPage;
 import UserInterface.PassengerDetails;
@@ -53,6 +54,7 @@ public class Window extends JFrame{
     private PassengerDetails passengerDetails = new PassengerDetails(4);
     private Payment payment = new Payment(false);
     private LoginPage loginPage = new LoginPage();
+    private Help help = new Help();
 
     private FlightChecker flightChecker = new FlightChecker();
     private boolean isLoggedIn = false;
@@ -380,6 +382,7 @@ public class Window extends JFrame{
         remove(btn_passengerFinal);
         remove(btn_payment_back);
         remove(p_bottomButtons);
+        remove(help);
     }   
 
 
@@ -488,6 +491,16 @@ public class Window extends JFrame{
                         add(navBar(barButtonsNames), BorderLayout.NORTH);
                         mainPage.emptyMainPageFields();
                         add(mainPage, BorderLayout.CENTER);
+                        revalidate();
+                        repaint();
+                    }
+                });
+            } else if (button.equals("Help")) {
+                barBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        removePages();
+                        add(help, BorderLayout.CENTER);
                         revalidate();
                         repaint();
                     }
